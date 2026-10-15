@@ -4,9 +4,124 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client-ts"
+  provider = "prisma-client"
+  output   = "src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum UserRole {
+  RESIDENT
+  ADMIN
+  STAFF
+}
+
+enum TicketStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum AssignmentStatus {
+  AWAITING_RESPONSE
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  COMPLETED
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  fullName     String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(RESIDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Tickets reported by this resident
+  tickets MaintenanceTicket[] @relation("ResidentTickets")
+
+  // Assignments given to this staff member
+  staffAssignments TicketAssignment[] @relation("AssignedStaff")
+
+  // Assignments created by this administrator
+  createdAssignments TicketAssignment[] @relation("AssignmentCreator")
+
+  // Updates performed by this user
+  ticketUpdates TicketUpdate[] @relation("UpdateActor")
+}
+
+model Hostel {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tickets MaintenanceTicket[]
+}
+
+model MaintenanceTicket {
+  id              String       @id @default(uuid()) @db.Uuid
+  residentId      String       @db.Uuid
+  hostelId        String       @db.Uuid
+  title           String
+  description     String
+  locationDetails String
+  status          TicketStatus @default(PENDING)
+  rejectionReason String?
+  resolvedAt      DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  resident User   @relation("ResidentTickets", fields: [residentId], references: [id], onDelete: Restrict)
+  hostel   Hostel @relation(fields: [hostelId], references: [id], onDelete: Restrict)
+
+  assignments TicketAssignment[]
+  updates     TicketUpdate[]
+
+  @@index([residentId])
+  @@index([hostelId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model TicketAssignment {
+  id               String           @id @default(uuid()) @db.Uuid
+  ticketId         String           @db.Uuid
+  staffId          String           @db.Uuid
+  assignedById     String           @db.Uuid
+  status           AssignmentStatus @default(AWAITING_RESPONSE)
+  assignedAt       DateTime         @default(now())
+  responseDeadline DateTime
+  respondedAt      DateTime?
+  createdAt        DateTime         @default(now())
+
+  ticket     MaintenanceTicket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  staff      User              @relation("AssignedStaff", fields: [staffId], references: [id], onDelete: Restrict)
+  assignedBy User              @relation("AssignmentCreator", fields: [assignedById], references: [id], onDelete: Restrict)
+
+  @@index([ticketId])
+  @@index([staffId])
+  @@index([assignedById])
+  @@index([status, responseDeadline])
+}
+
+model TicketUpdate {
+  id        String   @id @default(uuid()) @db.Uuid
+  ticketId  String   @db.Uuid
+  actorId   String?  @db.Uuid
+  eventType String
+  message   String?
+  createdAt DateTime @default(now())
+
+  ticket MaintenanceTicket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  actor  User?             @relation("UpdateActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+  @@index([actorId])
 }
