@@ -1,10 +1,16 @@
 {
   "name": "hostel_maintainance_api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "build:run": "npm run clean && npm run build && npm start",
+    "clean": "rm -rf dist",
+    "dev": "nodemon --exec tsx src/server.ts",
+    "start": "node dist/server.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "Hostel",
