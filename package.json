@@ -1,14 +1,16 @@
 {
   "name": "hostel_maintainance_api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
-    "start": "node dist/server.js",
-    "dev": "node",
     "build": "tsc",
-    "build:run": "tsc && node dist/server.js"
+    "build:run": "npm run clean && npm run build && npm start",
+    "clean": "rm -rf dist",
+    "dev": "nodemon --exec tsx src/server.ts",
+    "start": "node dist/server.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "Hostel",
@@ -26,10 +28,8 @@
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
     "@types/node": "^26.6.5",
     "jest": "^30.5.2",
-    "nodemon": "^3.1.14",
     "prisma": "^7.10.0",
     "supertest": "^7.3.1",
     "typescript": "^7.0.2"
