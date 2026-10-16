@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "src/generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -75,6 +75,7 @@ model MaintenanceTicket {
   status          TicketStatus @default(PENDING)
   rejectionReason String?
   resolvedAt      DateTime?
+  deletedAt       DateTime?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
@@ -88,6 +89,7 @@ model MaintenanceTicket {
   @@index([hostelId])
   @@index([status])
   @@index([createdAt])
+  @@index([deletedAt])
 }
 
 model TicketAssignment {
