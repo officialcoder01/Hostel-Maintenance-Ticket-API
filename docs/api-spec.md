@@ -265,7 +265,7 @@ A ticket can be edited only when:
 **Endpoint:** `DELETE /api/tickets/:id`  
 **Access:** Resident who owns the ticket
 
-Deletes a ticket only if it is owned by the resident, has status `PENDING`, and has no assignment with status `AWAITING_RESPONSE` or `ACCEPTED`.
+Soft-deletes a ticket only if it is owned by the resident, has status `PENDING`, and has no assignment with status `AWAITING_RESPONSE` or `ACCEPTED`. Soft-deleted tickets are excluded from normal resident and administrator queries, but remain in the database so their assignment and update history is preserved. A ticket with only declined or expired assignments remains eligible for soft deletion.
 
 **Success:** `204 No Content`  
 **Possible errors:**
