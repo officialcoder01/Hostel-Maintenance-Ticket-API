@@ -8,6 +8,7 @@
     "build:run": "npm run clean && npm run build && npm start",
     "clean": "rm -rf dist",
     "dev": "nodemon --exec tsx src/server.ts",
+    "dev:create-hostel": "tsx src/scripts/create-dev-hostel.ts",
     "dev:create-resident": "tsx src/scripts/create-dev-resident.ts",
     "dev:token": "tsx src/scripts/generate-dev-resident-token.ts",
     "start": "node dist/server.js",
