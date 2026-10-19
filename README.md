@@ -24,6 +24,7 @@ Create a `.env` file in the project root:
 DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/hostel_maintenance?schema=public"
 JWT_SECRET="replace-with-a-long-random-secret"
 PORT=8080
+NODE_ENV=development
 ```
 
 Replace `USER` and `PASSWORD` with your PostgreSQL credentials. URL-encode special characters in the password if needed. Use a unique, strong `JWT_SECRET`; do not commit your `.env` file. `PORT` is optional and defaults to `8080`.
@@ -54,20 +55,6 @@ npm run dev
 The API listens on `http://localhost:8080` by default (or the port set in `.env`). Visit `http://localhost:8080/` to check that it is running.
 
 ## Development scripts
-
-These helper scripts are restricted to development mode. Set `NODE_ENV` to `development` in the terminal before running them.
-
-PowerShell:
-
-```powershell
-$env:NODE_ENV = "development"
-```
-
-macOS/Linux:
-
-```bash
-export NODE_ENV=development
-```
 
 Create a resident user (you will be prompted to enter a password of at least 8 characters):
 
