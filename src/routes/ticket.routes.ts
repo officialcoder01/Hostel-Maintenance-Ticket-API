@@ -7,6 +7,7 @@ import type { TicketService } from "../services/ticket.service.js";
 export function createTicketRouter(service?: TicketService) {
   const router = Router();
   const controller = createTicketController(service);
+  
   router.use(authenticate, requireRole(UserRole.RESIDENT));
   router.post("/", controller.create);
   router.get("/mine", controller.listMine);
