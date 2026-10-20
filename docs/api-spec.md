@@ -125,6 +125,10 @@ Returns the created user's public information. Never return the password or pass
 
 The server automatically assigns the `RESIDENT` role.
 
+`fullName` must be non-empty and at most 100 characters, `email` must be a
+valid email address, and `password` must contain 8 to 72 characters. Additional
+fields, including `role`, are not accepted.
+
 ### 5.2 Log In
 
 **Endpoint:** `POST /api/auth/login`  
@@ -160,6 +164,10 @@ Example:
 **Possible errors:**
 - `400 Bad Request` — Invalid input.
 - `401 Unauthorized` — Invalid credentials.
+
+`email` must be a valid email address and `password` must contain 8 to 72
+characters. Invalid credentials always return the same response whether the
+email address is unknown or the password is incorrect.
 
 ### 5.3 Get Current User
 
