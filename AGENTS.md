@@ -148,6 +148,7 @@ This is a learning project. Code quality and understanding matter more than impl
 
 When implementing a feature:
 
+- Add meaningful comments where necesarry (use the comment format used in the project)
 - Prefer familiar TypeScript patterns over unnecessarily advanced techniques.
 - Explain important design decisions briefly.
 - Explain unfamiliar TypeScript concepts when they materially affect the implementation.
