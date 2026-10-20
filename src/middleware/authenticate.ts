@@ -7,9 +7,21 @@ function isUserRole(value: unknown): value is UserRole {
   return typeof value === "string" && Object.values(UserRole).some((role) => role === value);
 }
 
-export function authenticate(request: Request, _response: Response, next: NextFunction): void {
+/**
+ * Middleware to authenticate requests using JWT tokens.
+ * It verifies the token and attaches the user information to the request object.
+ * If authentication fails, it passes an error to the next middleware.
+ */
+export function authenticate(
+  request: Request,
+  _response: Response,
+  next: NextFunction
+): void {
   const authorization = request.header("authorization");
-  const token = authorization?.startsWith("Bearer ") ? authorization.slice(7) : undefined;
+  const token = authorization?.startsWith("Bearer ")
+  ? authorization.slice(7)
+  : undefined;
+
   const secret = process.env.JWT_SECRET;
 
   if (!token) {
@@ -24,6 +36,7 @@ export function authenticate(request: Request, _response: Response, next: NextFu
 
   try {
     const payload = jwt.verify(token, secret);
+    
     if (typeof payload === "string" || !isValidPayload(payload)) {
       throw new Error("Invalid token payload");
     }
