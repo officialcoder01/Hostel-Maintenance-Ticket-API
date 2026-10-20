@@ -100,7 +100,9 @@ async function createResident(): Promise<void> {
 try {
   await createResident();
 } catch (error) {
-  const message = error instanceof Error ? error.message : "Unable to create the development resident.";
+  const message = error instanceof Error
+    ? error.message
+    : "Unable to create the development resident.";
   console.error(message);
   process.exitCode = 1;
 } finally {

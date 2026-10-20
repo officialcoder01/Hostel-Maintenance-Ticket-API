@@ -50,7 +50,9 @@ async function generateToken(): Promise<void> {
 try {
   await generateToken();
 } catch (error) {
-  const message = error instanceof Error ? error.message : "Unable to generate a development token.";
+  const message = error instanceof Error
+  ? error.message
+  : "Unable to generate a development token.";
   console.error(message);
   process.exitCode = 1;
 } finally {

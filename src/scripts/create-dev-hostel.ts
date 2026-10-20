@@ -41,7 +41,9 @@ async function createHostel(): Promise<void> {
 try {
   await createHostel();
 } catch (error) {
-  const message = error instanceof Error ? error.message : "Unable to create the development hostel.";
+  const message = error instanceof Error
+    ? error.message
+    : "Unable to create the development hostel.";
   console.error(message);
   process.exitCode = 1;
 } finally {
