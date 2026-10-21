@@ -33,6 +33,10 @@ function isUniqueConstraintError(error: unknown): boolean {
 export class AuthService {
   constructor(private readonly database: AuthDatabase = prisma) {}
 
+  /**
+   * Registers a new user and returns their information.
+   * @param input - The input data for registering a new user.
+   */
   async register(input: RegisterInput) {
     const existingUser = await this.database.user.findUnique({
       where: { email: input.email },
@@ -64,6 +68,10 @@ export class AuthService {
     }
   }
 
+  /**
+   * Authenticates a user and returns an access token along with user information.
+   * @param input - The input data for logging in.
+   */
   async login(input: LoginInput) {
     const user = await this.database.user.findUnique({
       where: { email: input.email },
@@ -83,6 +91,10 @@ export class AuthService {
     };
   }
 
+  /**
+   * Retrieves the currently authenticated user based on their user ID.
+   * @param userId - The ID of the authenticated user.
+   */
   async getCurrentUser(userId: string) {
     const user = await this.database.user.findUnique({
       where: { id: userId },
@@ -96,6 +108,11 @@ export class AuthService {
     return user;
   }
 
+  /**
+   * Creates a JWT access token for the authenticated user.
+   * @param userId - The ID of the authenticated user.
+   * @param role - The role of the authenticated user.
+   */
   private createAccessToken(userId: string, role: UserRole): string {
     const secret = process.env.JWT_SECRET;
 
@@ -106,6 +123,10 @@ export class AuthService {
     return jwt.sign({ sub: userId, role }, secret, { expiresIn: "1h" });
   }
 
+  /**
+   * Converts a user object to a safe user object, excluding sensitive information.
+   * @param user - The user object to convert.
+   */
   private toSafeUser(user: {
     id: string;
     fullName: string;
