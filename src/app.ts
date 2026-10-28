@@ -1,5 +1,6 @@
 import express from "express";
 import { errorHandler } from "./middleware/error-handler.js";
+import { createAdminRouter } from "./routes/admin.routes.js";
 import { createAuthRouter } from "./routes/auth.routes.js";
 import { createTicketRouter } from "./routes/ticket.routes.js";
 
@@ -18,6 +19,7 @@ app.get("/", (_req, res) => {
 
 app.use("/api/auth", createAuthRouter());
 app.use("/api/tickets", createTicketRouter());
+app.use("/api/admin", createAdminRouter());
 app.use(errorHandler);
 
 export default app;
