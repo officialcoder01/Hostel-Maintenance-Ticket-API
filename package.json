@@ -11,6 +11,7 @@
     "dev:create-hostel": "tsx src/scripts/create-dev-hostel.ts",
     "dev:create-resident": "tsx src/scripts/create-dev-resident.ts",
     "dev:token": "tsx src/scripts/generate-dev-resident-token.ts",
+    "assignments:expire": "tsx src/scripts/expire-assignments.ts",
     "start": "node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "typecheck": "tsc --noEmit",
