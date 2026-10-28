@@ -14,10 +14,15 @@ A REST API built with Node.js, Express, TypeScript, PostgreSQL, and Prisma. Resi
 - Prisma database schema and migrations.
 - Development scripts for creating a hostel, creating a resident, and generating a resident JWT.
 - Automated tests for authentication, validation, services, and HTTP endpoints.
+- Admin-only ticket listing with pagination and status, hostel, and assignment-eligibility filters.
+- Admin ticket details with resident, hostel, assignment history, and update history.
+- Transactional ticket assignment and reassignment with 24-hour response deadlines.
+- Admin ticket rejection with a required reason and a ticket-history event.
+- A race-safe assignment expiration job that can be run by an external scheduler.
 
-### Not implemented yet
+Staff-facing assignment response and resolution endpoints are not implemented yet.
 
-The API specification describes administrator and maintenance staff workflows, including listing and assigning tickets, accepting or declining assignments, and resolving work. Those endpoints and workflows are not currently implemented. There are also no public API endpoints for hostel management; create local development hostels with the script below.
+There are no public API endpoints for hostel management; create local development hostels with the script below.
 
 See [docs/api-spec.md](docs/api-spec.md) for the full intended API behavior and [prisma/schema.prisma](prisma/schema.prisma) for the current data model.
 
@@ -84,6 +89,16 @@ To build and run the compiled application instead:
 npm run build
 npm start
 ```
+
+### Expire unanswered assignments
+
+Configure your hosting platform's persistent scheduler to run this command regularly (for example, once per minute):
+
+```bash
+npm run assignments:expire
+```
+
+The job expires up to 100 assignments per invocation and writes a system-authored ticket update for each expiration. It does not change the ticket's overall `PENDING` status.
 
 ## Try the resident workflow
 
