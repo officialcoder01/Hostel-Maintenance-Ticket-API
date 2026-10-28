@@ -298,18 +298,20 @@ Returns tickets across all residents and hostels.
 - `page` — Page number.
 - `limit` — Number of results per page.
 
-For this API, a ticket is eligible for assignment when it is `PENDING` and has no assignment with status `AWAITING_RESPONSE` or `ACCEPTED`.
+For this API, a ticket is eligible for assignment when it is `PENDING` and has no assignment with status `AWAITING_RESPONSE` or `ACCEPTED`. Soft-deleted tickets are excluded. The `unassigned=true` filter returns tickets meeting this eligibility rule.
 
-**Success:** `200 OK`  
+**Success:** `200 OK` with `{ "data": [...], "pagination": { "page": 1, "limit": 20, "total": 0, "totalPages": 0 } }`. Each ticket includes resident profile information and its assignment records with staff and assigning-administrator profiles.
+
 **Possible errors:** `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
 
 ### 7.2 Get Ticket Details
 
 **Endpoint:** `GET /api/admin/tickets/:id`
 
-Returns a ticket's details, resident information, and its current and previous assignment records.
+Returns a ticket's details, resident and hostel information, assignment history (including staff and assigning administrator), and chronological ticket updates.
 
-**Success:** `200 OK`  
+**Success:** `200 OK` with the ticket object, including its `resident`, `hostel`, `assignments`, and chronological `updates`.
+
 **Possible errors:** `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
 ### 7.3 Assign or Reassign a Ticket
@@ -333,7 +335,7 @@ Creates a new `TicketAssignment` record with:
 - `responseDeadline` — 24 hours after assignment.
 - `respondedAt` — `null`.
 
-**Success:** `201 Created`
+The `201 Created` response contains the created assignment and safe staff and administrator profile information. The operation also creates a `TicketUpdate` event with event type `ASSIGNED`.
 
 The ticket remains `PENDING` until the staff member accepts the assignment.
 
@@ -348,7 +350,7 @@ Reassignment creates a new assignment record. It must not overwrite previous ass
 - `400 Bad Request` — Invalid input.
 - `401 Unauthorized` — Not authenticated.
 - `403 Forbidden` — Not an administrator.
-- `404 Not Found` — Ticket or staff user does not exist.
+- `404 Not Found` — Ticket or staff user does not exist, or the selected user is not staff.
 - `409 Conflict` — Ticket is not eligible for assignment.
 
 ### 7.4 Reject a Ticket
@@ -367,7 +369,7 @@ Reassignment creates a new assignment record. It must not overwrite previous ass
 
 Sets the ticket's status to `REJECTED` and records the rejection reason. A `TicketUpdate` event must also record the rejection.
 
-A ticket may be rejected only before work begins. Tickets that are `IN_PROGRESS` or `RESOLVED` cannot be rejected.
+A ticket may be rejected only when it is `PENDING` and has no assignment with status `AWAITING_RESPONSE` or `ACCEPTED`. Declined and expired assignment history does not prevent rejection. Rejection updates the ticket's `rejectionReason`, sets its status to `REJECTED`, and creates a `TicketUpdate` event with event type `REJECTED`.
 
 **Possible errors:**
 - `400 Bad Request` — Missing or invalid reason.
@@ -499,6 +501,8 @@ System-generated events may have a `null` actor ID.
 
 Assignment expiration is handled by a background or scheduled system process, not by a user-facing endpoint.
 
+The implementation provides `npm run assignments:expire` as a one-shot scheduled-job command. Configure the hosting platform's persistent scheduler (for example, a cron job) to run it regularly, such as once per minute. Do not rely on an in-process timer for deployments that may restart or scale to multiple instances. Each invocation processes at most 100 due assignments; subsequent invocations process any remaining records.
+
 When an assignment remains `AWAITING_RESPONSE` past its `responseDeadline`, the system must:
 1. Change the assignment status to `EXPIRED`.
 2. Record the expiration in `TicketUpdate` with a `null` actor ID.
@@ -523,7 +527,7 @@ The following rules apply throughout the API:
 8. Every assignment attempt creates a separate record.
 9. Ticket status and assignment status must remain consistent.
 10. Important workflow transitions must be recorded in `TicketUpdate`.
-11. Administrative rejection requires a reason and is allowed only before work begins.
+11. Administrative rejection requires a reason and is allowed only for a pending ticket with no active assignment.
 12. Authorization and state-transition checks must be enforced by the server, not trusted to the client.
 
 ## 12. HTTP Status Codes
