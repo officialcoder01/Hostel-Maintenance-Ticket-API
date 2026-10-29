@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1840" height="1740" viewBox="0 0 1840 1740" role="img" aria-labelledby="title description">
+  <title id="title">Hostel maintenance resident ticket workflow</title>
+  <desc id="description">Flowchart of resident registration and login, followed by create, list, retrieve, update, and soft-delete ticket workflows.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52647a"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #18263a; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 16px; fill: #53657a; }
+      .lane-title { font-size: 17px; font-weight: 700; fill: #fff; }
+      .label { font-size: 15px; font-weight: 600; }
+      .small { font-size: 13px; }
+      .muted { font-size: 13px; fill: #52647a; }
+      .arrow { fill: none; stroke: #52647a; stroke-width: 2; marker-end: url(#arrow); }
+      .node { fill: #fff; stroke: #9aacc0; stroke-width: 2; }
+      .decision { fill: #fff9e8; stroke: #d3a342; stroke-width: 2; }
+      .success { fill: #e9f7ef; stroke: #54a879; stroke-width: 2; }
+      .failure { fill: #fff0ef; stroke: #d87970; stroke-width: 2; }
+      .shared { fill: #edf4ff; stroke: #668ec7; stroke-width: 2; }
+      .lane { fill: #f7f9fc; stroke: #dbe3ec; stroke-width: 1.5; }
+      .lane-header { fill: #315d8a; }
+    </style>
+  </defs>
+
+  <rect width="1840" height="1740" fill="#fff"/>
+  <text class="title" x="920" y="46" text-anchor="middle">Resident Ticket Workflow</text>
+  <text class="subtitle" x="920" y="74" text-anchor="middle">Hostel Maintenance API | Residents access their own tickets with a bearer JWT</text>
+
+  <rect class="shared" x="85" y="102" width="420" height="126" rx="14"/>
+  <text class="label" x="295" y="132" text-anchor="middle">Optional resident account setup</text>
+  <text class="small" x="295" y="158" text-anchor="middle">POST /api/auth/register</text>
+  <text class="small" x="295" y="180" text-anchor="middle">Public registration creates RESIDENT accounts</text>
+  <text class="small" x="295" y="202" text-anchor="middle">Invalid input: 400 | Existing email: 409</text>
+  <rect class="shared" x="1340" y="102" width="420" height="126" rx="14"/>
+  <text class="label" x="1550" y="132" text-anchor="middle">Resident logs in</text>
+  <text class="small" x="1550" y="158" text-anchor="middle">POST /api/auth/login with email and password</text>
+  <text class="small" x="1550" y="180" text-anchor="middle">Success returns access token and safe user data</text>
+  <text class="small" x="1550" y="202" text-anchor="middle">Invalid credentials: 401</text>
+  <path class="arrow" d="M505 164 H1335"/>
+  <text class="small" x="920" y="151" text-anchor="middle">Account ready</text>
+  <rect class="shared" x="570" y="254" width="700" height="76" rx="14"/>
+  <text class="label" x="920" y="285" text-anchor="middle">Send a ticket request with Authorization: Bearer &lt;token&gt;</text>
+  <text class="small" x="920" y="309" text-anchor="middle">Express JSON middleware routes /api/tickets to resident-only endpoints</text>
+  <path class="arrow" d="M295 228 V292 H565"/>
+  <path class="arrow" d="M1550 228 V292 H1275"/>
+  <path class="arrow" d="M920 330 V357"/>
+  <polygon class="decision" points="920,357 1070,411 920,465 770,411"/>
+  <text class="label" x="920" y="407" text-anchor="middle">Authenticated as RESIDENT?</text>
+  <text class="small" x="920" y="430" text-anchor="middle">Valid JWT and role check</text>
+  <path class="arrow" d="M770 411 H640"/>
+  <text class="small" x="704" y="398" text-anchor="middle">No / wrong role</text>
+  <rect class="failure" x="370" y="375" width="264" height="72" rx="12"/>
+  <text class="label" x="502" y="404" text-anchor="middle">Stop: 401 / 403</text>
+  <text class="small" x="502" y="427" text-anchor="middle">Unauthenticated / forbidden</text>
+  <path class="arrow" d="M920 465 V500"/>
+  <text class="small" x="936" y="487">Yes</text>
+  <rect class="shared" x="730" y="502" width="380" height="58" rx="12"/>
+  <text class="label" x="920" y="537" text-anchor="middle">Choose a resident ticket endpoint</text>
+
+  <rect class="lane" x="20" y="610" width="348" height="1070" rx="16"/>
+  <rect class="lane" x="386" y="610" width="348" height="1070" rx="16"/>
+  <rect class="lane" x="752" y="610" width="348" height="1070" rx="16"/>
+  <rect class="lane" x="1118" y="610" width="348" height="1070" rx="16"/>
+  <rect class="lane" x="1484" y="610" width="336" height="1070" rx="16"/>
+
+  <path class="arrow" d="M920 560 V582 H194 V605"/>
+  <path class="arrow" d="M920 560 V582 H560 V605"/>
+  <path class="arrow" d="M920 560 V605"/>
+  <path class="arrow" d="M920 560 V582 H1292 V605"/>
+  <path class="arrow" d="M920 560 V582 H1652 V605"/>
+
+  <rect class="lane-header" x="20" y="610" width="348" height="56" rx="16"/>
+  <rect fill="#315d8a" x="20" y="646" width="348" height="20"/>
+  <text class="lane-title" x="194" y="646" text-anchor="middle">1. Create a ticket</text>
+  <rect class="lane-header" x="386" y="610" width="348" height="56" rx="16"/>
+  <rect fill="#315d8a" x="386" y="646" width="348" height="20"/>
+  <text class="lane-title" x="560" y="646" text-anchor="middle">2. List my tickets</text>
+  <rect class="lane-header" x="752" y="610" width="348" height="56" rx="16"/>
+  <rect fill="#315d8a" x="752" y="646" width="348" height="20"/>
+  <text class="lane-title" x="926" y="646" text-anchor="middle">3. View a ticket</text>
+  <rect class="lane-header" x="1118" y="610" width="348" height="56" rx="16"/>
+  <rect fill="#315d8a" x="1118" y="646" width="348" height="20"/>
+  <text class="lane-title" x="1292" y="646" text-anchor="middle">4. Edit a ticket</text>
+  <rect class="lane-header" x="1484" y="610" width="336" height="56" rx="16"/>
+  <rect fill="#315d8a" x="1484" y="646" width="336" height="20"/>
+  <text class="lane-title" x="1652" y="646" text-anchor="middle">5. Delete a ticket</text>
+
+  <!-- Create -->
+  <rect class="node" x="44" y="688" width="300" height="90" rx="12"/>
+  <text class="label" x="194" y="718" text-anchor="middle">POST /api/tickets</text>
+  <text class="small" x="194" y="741" text-anchor="middle">hostelId, title, description,</text>
+  <text class="small" x="194" y="761" text-anchor="middle">locationDetails</text>
+  <path class="arrow" d="M194 778 V814"/>
+  <polygon class="decision" points="194,814 304,860 194,906 84,860"/>
+  <text class="label" x="194" y="856" text-anchor="middle">Request valid?</text>
+  <text class="small" x="194" y="877" text-anchor="middle">Fields and UUID</text>
+  <path class="arrow" d="M194 906 V942"/>
+  <text class="small" x="210" y="930">Yes</text>
+  <rect class="node" x="44" y="944" width="300" height="86" rx="12"/>
+  <text class="label" x="194" y="975" text-anchor="middle">Check hostel exists</text>
+  <text class="small" x="194" y="1000" text-anchor="middle">Owner comes from JWT</text>
+  <path class="arrow" d="M194 1030 V1063"/>
+  <polygon class="decision" points="194,1063 304,1109 194,1155 84,1109"/>
+  <text class="label" x="194" y="1105" text-anchor="middle">Hostel found?</text>
+  <path class="arrow" d="M194 1155 V1191"/>
+  <text class="small" x="210" y="1179">Yes</text>
+  <rect class="success" x="44" y="1193" width="300" height="96" rx="12"/>
+  <text class="label" x="194" y="1227" text-anchor="middle">Create PENDING ticket</text>
+  <text class="small" x="194" y="1252" text-anchor="middle">201 Created; resident owns it</text>
+  <text class="small" x="194" y="1273" text-anchor="middle">resolution time starts null</text>
+  <text class="small" x="336" y="860" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="336" y="1109" text-anchor="middle" fill="#b4473f">404</text>
+
+  <!-- List -->
+  <rect class="node" x="410" y="688" width="300" height="90" rx="12"/>
+  <text class="label" x="560" y="718" text-anchor="middle">GET /api/tickets/mine</text>
+  <text class="small" x="560" y="741" text-anchor="middle">Optional status, page, and limit</text>
+  <text class="small" x="560" y="761" text-anchor="middle">Defaults: page 1, limit 20</text>
+  <path class="arrow" d="M560 778 V814"/>
+  <polygon class="decision" points="560,814 670,860 560,906 450,860"/>
+  <text class="label" x="560" y="856" text-anchor="middle">Query valid?</text>
+  <text class="small" x="560" y="877" text-anchor="middle">Status and pagination</text>
+  <path class="arrow" d="M560 906 V947"/>
+  <text class="small" x="576" y="933">Yes</text>
+  <rect class="node" x="410" y="949" width="300" height="104" rx="12"/>
+  <text class="label" x="560" y="980" text-anchor="middle">Find resident's tickets</text>
+  <text class="small" x="560" y="1005" text-anchor="middle">Exclude soft-deleted tickets;</text>
+  <text class="small" x="560" y="1027" text-anchor="middle">apply filter and pagination</text>
+  <path class="arrow" d="M560 1053 V1091"/>
+  <rect class="success" x="410" y="1093" width="300" height="92" rx="12"/>
+  <text class="label" x="560" y="1127" text-anchor="middle">Return 200 OK</text>
+  <text class="small" x="560" y="1152" text-anchor="middle">Ticket data and pagination</text>
+  <text class="small" x="702" y="860" text-anchor="middle" fill="#b4473f">400</text>
+
+  <!-- View details -->
+  <rect class="node" x="776" y="688" width="300" height="90" rx="12"/>
+  <text class="label" x="926" y="718" text-anchor="middle">GET /api/tickets/:id</text>
+  <text class="small" x="926" y="741" text-anchor="middle">Provide ticket UUID</text>
+  <path class="arrow" d="M926 778 V814"/>
+  <polygon class="decision" points="926,814 1036,860 926,906 816,860"/>
+  <text class="label" x="926" y="856" text-anchor="middle">Ticket ID valid?</text>
+  <path class="arrow" d="M926 906 V947"/>
+  <text class="small" x="942" y="933">Yes</text>
+  <rect class="node" x="776" y="949" width="300" height="104" rx="12"/>
+  <text class="label" x="926" y="980" text-anchor="middle">Find owned, visible ticket</text>
+  <text class="small" x="926" y="1005" text-anchor="middle">Match ticket ID and resident ID</text>
+  <text class="small" x="926" y="1027" text-anchor="middle">Exclude soft-deleted tickets</text>
+  <path class="arrow" d="M926 1053 V1085"/>
+  <polygon class="decision" points="926,1085 1036,1131 926,1177 816,1131"/>
+  <text class="label" x="926" y="1127" text-anchor="middle">Ticket found?</text>
+  <path class="arrow" d="M926 1177 V1215"/>
+  <text class="small" x="942" y="1202">Yes</text>
+  <rect class="success" x="776" y="1217" width="300" height="78" rx="12"/>
+  <text class="label" x="926" y="1250" text-anchor="middle">Return 200 ticket details</text>
+  <text class="small" x="926" y="1273" text-anchor="middle">Only the owner's ticket is visible</text>
+  <text class="small" x="1068" y="860" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="1068" y="1131" text-anchor="middle" fill="#b4473f">404</text>
+
+  <!-- Update -->
+  <rect class="node" x="1142" y="688" width="300" height="90" rx="12"/>
+  <text class="label" x="1292" y="718" text-anchor="middle">PATCH /api/tickets/:id</text>
+  <text class="small" x="1292" y="741" text-anchor="middle">title, description, and/or</text>
+  <text class="small" x="1292" y="761" text-anchor="middle">locationDetails only</text>
+  <path class="arrow" d="M1292 778 V814"/>
+  <polygon class="decision" points="1292,814 1402,860 1292,906 1182,860"/>
+  <text class="label" x="1292" y="856" text-anchor="middle">ID and input valid?</text>
+  <text class="small" x="1292" y="877" text-anchor="middle">At least one allowed field</text>
+  <path class="arrow" d="M1292 906 V938"/>
+  <text class="small" x="1308" y="926">Yes</text>
+  <polygon class="decision" points="1292,938 1402,984 1292,1030 1182,984"/>
+  <text class="label" x="1292" y="980" text-anchor="middle">Owned ticket exists?</text>
+  <text class="small" x="1292" y="1001" text-anchor="middle">and not soft-deleted</text>
+  <path class="arrow" d="M1292 1030 V1062"/>
+  <text class="small" x="1308" y="1050">Yes</text>
+  <polygon class="decision" points="1292,1062 1402,1108 1292,1154 1182,1108"/>
+  <text class="label" x="1292" y="1104" text-anchor="middle">PENDING with no</text>
+  <text class="small" x="1292" y="1125" text-anchor="middle">active assignment?</text>
+  <path class="arrow" d="M1292 1154 V1191"/>
+  <text class="small" x="1308" y="1178">Yes</text>
+  <rect class="success" x="1142" y="1193" width="300" height="82" rx="12"/>
+  <text class="label" x="1292" y="1227" text-anchor="middle">Update ticket fields</text>
+  <text class="small" x="1292" y="1252" text-anchor="middle">Return 200 OK with ticket</text>
+  <text class="small" x="1434" y="860" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="1434" y="984" text-anchor="middle" fill="#b4473f">404</text>
+  <text class="small" x="1434" y="1108" text-anchor="middle" fill="#b4473f">409</text>
+
+  <!-- Delete -->
+  <rect class="node" x="1508" y="688" width="288" height="90" rx="12"/>
+  <text class="label" x="1652" y="718" text-anchor="middle">DELETE /api/tickets/:id</text>
+  <text class="small" x="1652" y="741" text-anchor="middle">Provide ticket UUID</text>
+  <text class="small" x="1652" y="761" text-anchor="middle">Soft delete; preserve history</text>
+  <path class="arrow" d="M1652 778 V814"/>
+  <polygon class="decision" points="1652,814 1762,860 1652,906 1542,860"/>
+  <text class="label" x="1652" y="856" text-anchor="middle">Ticket ID valid?</text>
+  <path class="arrow" d="M1652 906 V938"/>
+  <text class="small" x="1668" y="926">Yes</text>
+  <polygon class="decision" points="1652,938 1762,984 1652,1030 1542,984"/>
+  <text class="label" x="1652" y="980" text-anchor="middle">Owned ticket exists?</text>
+  <text class="small" x="1652" y="1001" text-anchor="middle">and not soft-deleted</text>
+  <path class="arrow" d="M1652 1030 V1062"/>
+  <text class="small" x="1668" y="1050">Yes</text>
+  <polygon class="decision" points="1652,1062 1762,1108 1652,1154 1542,1108"/>
+  <text class="label" x="1652" y="1104" text-anchor="middle">PENDING with no</text>
+  <text class="small" x="1652" y="1125" text-anchor="middle">active assignment?</text>
+  <path class="arrow" d="M1652 1154 V1191"/>
+  <text class="small" x="1668" y="1178">Yes</text>
+  <rect class="success" x="1508" y="1193" width="288" height="82" rx="12"/>
+  <text class="label" x="1652" y="1227" text-anchor="middle">Set deletedAt</text>
+  <text class="small" x="1652" y="1252" text-anchor="middle">Return 204 No Content</text>
+  <text class="small" x="1790" y="860" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="1790" y="984" text-anchor="middle" fill="#b4473f">404</text>
+  <text class="small" x="1790" y="1108" text-anchor="middle" fill="#b4473f">409</text>
+
+  <text class="muted" x="920" y="1632" text-anchor="middle">Active assignments are AWAITING_RESPONSE or ACCEPTED. Declined or expired assignments do not block editing or soft deletion.</text>
+  <text class="muted" x="920" y="1657" text-anchor="middle">Soft-deleted tickets are hidden from normal resident and admin queries; their assignment and update history remains in the database.</text>
+</svg>
