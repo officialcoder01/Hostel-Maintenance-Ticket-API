@@ -37,7 +37,7 @@ const ticketDetails = {
   hostel: { select: { id: true, name: true, address: true } },
   assignments: assignmentInfo,
   updates: {
-    orderBy: [{ createdAt: "asc" as const }, { id: "asc" as const }],
+    orderBy: [{ createdAt: "desc" as const }, { id: "desc" as const }],
     include: {
       actor: { select: { id: true, fullName: true, email: true } },
     },
@@ -170,6 +170,7 @@ export class AdminTicketService {
         }
 
         const assignedAt = new Date();
+        // Calculate the response deadline as 24 hours from the assignment time.
         const responseDeadline = new Date(assignedAt.getTime() + 24 * 60 * 60 * 1_000);
 
         // Update the maintenance ticket's updatedAt field to reflect the assignment action.
