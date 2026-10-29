@@ -10,6 +10,11 @@ import {
   type AdminTicketService
 } from "../services/admin-ticket.service.js";
 
+/**
+ * Creates an admin ticket controller with the provided service.
+ * @param service - The admin ticket service to use. Defaults to the default admin ticket service.
+ * @returns An object containing the controller methods for handling admin ticket requests.
+ */
 export function createAdminTicketController(
   service: AdminTicketService = adminTicketService
 ) {
