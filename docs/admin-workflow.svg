@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1640" viewBox="0 0 1440 1640" role="img" aria-labelledby="title description">
+  <title id="title">Hostel maintenance admin ticket workflow</title>
+  <desc id="description">Flowchart showing admin authentication and the list, detail, assign, and reject ticket workflows.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52647a"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #18263a; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 16px; fill: #53657a; }
+      .lane-title { font-size: 18px; font-weight: 700; fill: #fff; }
+      .label { font-size: 15px; font-weight: 600; }
+      .small { font-size: 13px; }
+      .muted { font-size: 13px; fill: #52647a; }
+      .arrow { fill: none; stroke: #52647a; stroke-width: 2; marker-end: url(#arrow); }
+      .link { fill: none; stroke: #52647a; stroke-width: 2; }
+      .node { fill: #fff; stroke: #9aacc0; stroke-width: 2; }
+      .decision { fill: #fff9e8; stroke: #d3a342; stroke-width: 2; }
+      .success { fill: #e9f7ef; stroke: #54a879; stroke-width: 2; }
+      .failure { fill: #fff0ef; stroke: #d87970; stroke-width: 2; }
+      .shared { fill: #edf4ff; stroke: #668ec7; stroke-width: 2; }
+      .lane { fill: #f7f9fc; stroke: #dbe3ec; stroke-width: 1.5; }
+      .lane-header { fill: #315d8a; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1640" fill="#fff"/>
+  <text class="title" x="720" y="46" text-anchor="middle">Admin Ticket Workflow</text>
+  <text class="subtitle" x="720" y="74" text-anchor="middle">Hostel Maintenance API | All routes require authentication and the ADMIN role</text>
+
+  <rect class="shared" x="570" y="98" width="300" height="58" rx="14"/>
+  <text class="label" x="720" y="133" text-anchor="middle">Admin client sends request</text>
+  <path class="arrow" d="M720 156 V184"/>
+  <rect class="shared" x="510" y="186" width="420" height="68" rx="12"/>
+  <text class="label" x="720" y="214" text-anchor="middle">Express app routes /api/admin request</text>
+  <text class="small" x="720" y="237" text-anchor="middle">Authenticate JWT, then require ADMIN role</text>
+  <path class="arrow" d="M720 254 V281"/>
+  <polygon class="decision" points="720,281 865,330 720,379 575,330"/>
+  <text class="label" x="720" y="326" text-anchor="middle">Authenticated admin?</text>
+  <text class="small" x="720" y="347" text-anchor="middle">Valid JWT and role</text>
+  <path class="arrow" d="M575 330 H385"/>
+  <text class="small" x="480" y="319" text-anchor="middle">No</text>
+  <rect class="failure" x="120" y="294" width="260" height="72" rx="12"/>
+  <text class="label" x="250" y="323" text-anchor="middle">Stop: 401 or 403</text>
+  <text class="small" x="250" y="346" text-anchor="middle">Unauthenticated / forbidden</text>
+  <path class="arrow" d="M720 379 V414"/>
+  <text class="small" x="736" y="402">Yes</text>
+  <rect class="shared" x="545" y="416" width="350" height="62" rx="12"/>
+  <text class="label" x="720" y="453" text-anchor="middle">Validate request, then dispatch by endpoint</text>
+
+  <rect class="lane" x="20" y="535" width="340" height="1075" rx="16"/>
+  <rect class="lane" x="380" y="535" width="340" height="1075" rx="16"/>
+  <rect class="lane" x="740" y="535" width="340" height="1075" rx="16"/>
+  <rect class="lane" x="1100" y="535" width="320" height="1075" rx="16"/>
+
+  <path class="link" d="M720 478 V510 H190 V530 M720 510 H550 V530 M720 510 H910 V530 M720 510 H1260 V530"/>
+  <path class="arrow" d="M190 510 V530"/>
+  <path class="arrow" d="M550 510 V530"/>
+  <path class="arrow" d="M910 510 V530"/>
+  <path class="arrow" d="M1260 510 V530"/>
+
+  <rect class="lane-header" x="20" y="535" width="340" height="56" rx="16"/>
+  <rect fill="#315d8a" x="20" y="571" width="340" height="20"/>
+  <text class="lane-title" x="190" y="571" text-anchor="middle">1. List tickets</text>
+  <rect class="lane-header" x="380" y="535" width="340" height="56" rx="16"/>
+  <rect fill="#315d8a" x="380" y="571" width="340" height="20"/>
+  <text class="lane-title" x="550" y="571" text-anchor="middle">2. View ticket details</text>
+  <rect class="lane-header" x="740" y="535" width="340" height="56" rx="16"/>
+  <rect fill="#315d8a" x="740" y="571" width="340" height="20"/>
+  <text class="lane-title" x="910" y="571" text-anchor="middle">3. Assign / reassign</text>
+  <rect class="lane-header" x="1100" y="535" width="320" height="56" rx="16"/>
+  <rect fill="#315d8a" x="1100" y="571" width="320" height="20"/>
+  <text class="lane-title" x="1260" y="571" text-anchor="middle">4. Reject ticket</text>
+
+  <!-- List tickets -->
+  <rect class="node" x="48" y="615" width="284" height="70" rx="12"/>
+  <text class="label" x="190" y="644" text-anchor="middle">GET /api/admin/tickets</text>
+  <text class="small" x="190" y="666" text-anchor="middle">Optional filters and pagination</text>
+  <path class="arrow" d="M190 685 V724"/>
+  <polygon class="decision" points="190,724 300,770 190,816 80,770"/>
+  <text class="label" x="190" y="766" text-anchor="middle">Query valid?</text>
+  <text class="small" x="190" y="786" text-anchor="middle">status, hostel, page, limit</text>
+  <path class="arrow" d="M190 816 V852"/>
+  <text class="small" x="205" y="840">Yes</text>
+  <rect class="node" x="48" y="854" width="284" height="102" rx="12"/>
+  <text class="label" x="190" y="884" text-anchor="middle">Find non-deleted tickets</text>
+  <text class="small" x="190" y="908" text-anchor="middle">Apply filters; include ticket</text>
+  <text class="small" x="190" y="929" text-anchor="middle">and assignment history</text>
+  <path class="arrow" d="M190 956 V994"/>
+  <rect class="success" x="48" y="996" width="284" height="76" rx="12"/>
+  <text class="label" x="190" y="1027" text-anchor="middle">Return 200 ticket list</text>
+  <text class="small" x="190" y="1050" text-anchor="middle">Results and pagination</text>
+  <path class="arrow" d="M300 770 H344 V1118 H260"/>
+  <text class="small" x="320" y="757">No</text>
+  <rect class="failure" x="48" y="1080" width="212" height="68" rx="12"/>
+  <text class="label" x="154" y="1109" text-anchor="middle">Stop: 400</text>
+  <text class="small" x="154" y="1132" text-anchor="middle">Invalid query</text>
+
+  <!-- Ticket details -->
+  <rect class="node" x="408" y="615" width="284" height="70" rx="12"/>
+  <text class="label" x="550" y="644" text-anchor="middle">GET /api/admin/tickets/:id</text>
+  <text class="small" x="550" y="666" text-anchor="middle">Provide ticket ID</text>
+  <path class="arrow" d="M550 685 V724"/>
+  <polygon class="decision" points="550,724 660,770 550,816 440,770"/>
+  <text class="label" x="550" y="766" text-anchor="middle">Ticket ID valid?</text>
+  <path class="arrow" d="M550 816 V852"/>
+  <text class="small" x="565" y="840">Yes</text>
+  <rect class="node" x="408" y="854" width="284" height="82" rx="12"/>
+  <text class="label" x="550" y="884" text-anchor="middle">Find non-deleted ticket</text>
+  <text class="small" x="550" y="908" text-anchor="middle">Load resident, hostel, history</text>
+  <path class="arrow" d="M550 936 V973"/>
+  <polygon class="decision" points="550,973 660,1019 550,1065 440,1019"/>
+  <text class="label" x="550" y="1015" text-anchor="middle">Ticket found?</text>
+  <path class="arrow" d="M550 1065 V1103"/>
+  <text class="small" x="565" y="1091">Yes</text>
+  <rect class="success" x="408" y="1105" width="284" height="92" rx="12"/>
+  <text class="label" x="550" y="1136" text-anchor="middle">Return 200 ticket details</text>
+  <text class="small" x="550" y="1160" text-anchor="middle">Resident, hostel, assignments,</text>
+  <text class="small" x="550" y="1180" text-anchor="middle">chronological updates</text>
+  <path class="arrow" d="M660 770 H704 V1264 H600"/>
+  <text class="small" x="677" y="757">No</text>
+  <path class="arrow" d="M660 1019 H690 V1264 H600"/>
+  <text class="small" x="673" y="1006">No</text>
+  <rect class="failure" x="408" y="1228" width="192" height="68" rx="12"/>
+  <text class="label" x="504" y="1257" text-anchor="middle">Stop: 400 or 404</text>
+  <text class="small" x="504" y="1280" text-anchor="middle">Invalid ID / not found</text>
+
+  <!-- Assign or reassign -->
+  <rect class="node" x="768" y="615" width="284" height="70" rx="12"/>
+  <text class="label" x="910" y="644" text-anchor="middle">PATCH .../:id/assignments</text>
+  <text class="small" x="910" y="666" text-anchor="middle">Provide ticket ID and staffId</text>
+  <path class="arrow" d="M910 685 V714"/>
+  <polygon class="decision" points="910,714 1018,759 910,804 802,759"/>
+  <text class="label" x="910" y="755" text-anchor="middle">Input valid?</text>
+  <text class="small" x="910" y="775" text-anchor="middle">UUIDs</text>
+  <path class="arrow" d="M910 804 V828"/>
+  <text class="small" x="925" y="821">Yes</text>
+  <polygon class="decision" points="910,828 1018,873 910,918 802,873"/>
+  <text class="label" x="910" y="869" text-anchor="middle">Ticket exists and</text>
+  <text class="small" x="910" y="889" text-anchor="middle">is not deleted?</text>
+  <path class="arrow" d="M910 918 V942"/>
+  <text class="small" x="925" y="935">Yes</text>
+  <polygon class="decision" points="910,942 1018,987 910,1032 802,987"/>
+  <text class="label" x="910" y="983" text-anchor="middle">PENDING with no</text>
+  <text class="small" x="910" y="1003" text-anchor="middle">active assignment?</text>
+  <path class="arrow" d="M910 1032 V1056"/>
+  <text class="small" x="925" y="1049">Yes</text>
+  <polygon class="decision" points="910,1056 1018,1101 910,1146 802,1101"/>
+  <text class="label" x="910" y="1097" text-anchor="middle">User is STAFF?</text>
+  <path class="arrow" d="M910 1146 V1173"/>
+  <text class="small" x="925" y="1167">Yes</text>
+  <rect class="shared" x="768" y="1175" width="284" height="122" rx="12"/>
+  <text class="label" x="910" y="1205" text-anchor="middle">Transaction creates assignment</text>
+  <text class="small" x="910" y="1230" text-anchor="middle">AWAITING_RESPONSE, 24-hour</text>
+  <text class="small" x="910" y="1251" text-anchor="middle">deadline and ASSIGNED event</text>
+  <text class="small" x="910" y="1273" text-anchor="middle">Previous assignment history kept</text>
+  <path class="arrow" d="M910 1297 V1330"/>
+  <rect class="success" x="768" y="1332" width="284" height="80" rx="12"/>
+  <text class="label" x="910" y="1365" text-anchor="middle">Return 201 Created</text>
+  <text class="small" x="910" y="1388" text-anchor="middle">Ticket remains PENDING</text>
+  <text class="small" x="798" y="746" text-anchor="end" fill="#b4473f">No: 400</text>
+  <text class="small" x="798" y="860" text-anchor="end" fill="#b4473f">No: 404</text>
+  <text class="small" x="798" y="974" text-anchor="end" fill="#b4473f">No: 409</text>
+  <text class="small" x="798" y="1088" text-anchor="end" fill="#b4473f">No: 404</text>
+
+  <!-- Reject ticket -->
+  <rect class="node" x="1124" y="615" width="272" height="70" rx="12"/>
+  <text class="label" x="1260" y="644" text-anchor="middle">PATCH .../:id/rejection</text>
+  <text class="small" x="1260" y="666" text-anchor="middle">Provide ticket ID and reason</text>
+  <path class="arrow" d="M1260 685 V714"/>
+  <polygon class="decision" points="1260,714 1368,759 1260,804 1152,759"/>
+  <text class="label" x="1260" y="755" text-anchor="middle">Input valid?</text>
+  <text class="small" x="1260" y="775" text-anchor="middle">UUID and reason</text>
+  <path class="arrow" d="M1260 804 V828"/>
+  <text class="small" x="1275" y="821">Yes</text>
+  <polygon class="decision" points="1260,828 1368,873 1260,918 1152,873"/>
+  <text class="label" x="1260" y="869" text-anchor="middle">Ticket exists and</text>
+  <text class="small" x="1260" y="889" text-anchor="middle">is not deleted?</text>
+  <path class="arrow" d="M1260 918 V942"/>
+  <text class="small" x="1275" y="935">Yes</text>
+  <polygon class="decision" points="1260,942 1368,987 1260,1032 1152,987"/>
+  <text class="label" x="1260" y="983" text-anchor="middle">PENDING with no</text>
+  <text class="small" x="1260" y="1003" text-anchor="middle">active assignment?</text>
+  <path class="arrow" d="M1260 1032 V1070"/>
+  <text class="small" x="1275" y="1056">Yes</text>
+  <rect class="shared" x="1124" y="1072" width="272" height="114" rx="12"/>
+  <text class="label" x="1260" y="1102" text-anchor="middle">Transaction updates ticket</text>
+  <text class="small" x="1260" y="1127" text-anchor="middle">Set REJECTED, save reason,</text>
+  <text class="small" x="1260" y="1149" text-anchor="middle">write REJECTED history event</text>
+  <path class="arrow" d="M1260 1186 V1224"/>
+  <rect class="success" x="1124" y="1226" width="272" height="80" rx="12"/>
+  <text class="label" x="1260" y="1259" text-anchor="middle">Return 200 OK</text>
+  <text class="small" x="1260" y="1282" text-anchor="middle">Ticket is REJECTED</text>
+  <text class="small" x="1148" y="746" text-anchor="end" fill="#b4473f">No: 400</text>
+  <text class="small" x="1148" y="860" text-anchor="end" fill="#b4473f">No: 404</text>
+  <text class="small" x="1148" y="974" text-anchor="end" fill="#b4473f">No: 409</text>
+
+  <text class="muted" x="720" y="1560" text-anchor="middle">Active assignments are AWAITING_RESPONSE or ACCEPTED. Declined and expired history does not block reassignment or rejection.</text>
+  <text class="muted" x="720" y="1586" text-anchor="middle">The scheduled expiration job is separate; expiring an assignment leaves the ticket PENDING.</text>
+</svg>
