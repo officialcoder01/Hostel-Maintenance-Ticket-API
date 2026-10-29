@@ -11,11 +11,20 @@ type AssignmentExpirationDatabase = Pick<PrismaClient, "$transaction"> & {
   ticketAssignment: Pick<PrismaClient["ticketAssignment"], "findMany">;
 };
 
+/**
+ * Service responsible for expiring ticket assignments that have not been 
+ * responded to within the allowed time frame.
+ */
 export class AssignmentExpirationService {
   constructor(
     private readonly database: AssignmentExpirationDatabase = prisma
   ) {}
 
+  /**
+   * Expires due ticket assignments that have not been responded to within the allowed time frame.
+   * @param now - The current date and time. Defaults to the current date and time if not provided.
+   * @returns The number of assignments that were expired.
+   */
   async expireDueAssignments(now = new Date()): Promise<number> {
     const dueAssignments = await this.database.ticketAssignment.findMany({
       where: {
@@ -28,6 +37,8 @@ export class AssignmentExpirationService {
     });
 
     let expiredCount = 0;
+    
+    // Expire each due assignment in a transaction to ensure atomicity and consistency.
     for (const assignment of dueAssignments) {
       const didExpire = await this.database.$transaction(async (transaction) => {
         const result = await transaction.ticketAssignment.updateMany({
@@ -46,6 +57,7 @@ export class AssignmentExpirationService {
           return false;
         }
 
+        // Log the expiration event in the ticket updates table.
         await transaction.ticketUpdate.create({
           data: {
             ticketId: assignment.ticketId,
