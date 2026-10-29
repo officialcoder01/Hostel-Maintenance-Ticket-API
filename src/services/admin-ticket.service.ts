@@ -70,9 +70,17 @@ function conflictError(): AppError {
   );
 }
 
+/**
+ * Service responsible for managing maintenance tickets from an admin perspective.
+ */
 export class AdminTicketService {
   constructor(private readonly database: AdminTicketDatabase = prisma) {}
 
+  /**
+   * Lists maintenance tickets based on the provided query parameters.
+   * @param query - The query parameters for filtering and pagination.
+   * @returns An object containing the list of tickets and pagination information.
+   */
   async list(query: AdminListTicketsQuery) {
     const where = {
       ...visibleTicket,
@@ -115,6 +123,11 @@ export class AdminTicketService {
     };
   }
 
+  /**
+   * Retrieves a maintenance ticket by its ID.
+   * @param ticketId - The ID of the ticket to retrieve.
+   * @returns The maintenance ticket if found, otherwise throws an error.
+   */
   async getById(ticketId: string) {
     const ticket = await this.database.maintenanceTicket.findFirst({
       where: { id: ticketId, ...visibleTicket },
@@ -128,6 +141,13 @@ export class AdminTicketService {
     return ticket;
   }
 
+  /**
+   * Assigns a maintenance ticket to a staff member.
+   * @param adminId - The ID of the admin assigning the ticket.
+   * @param ticketId - The ID of the ticket to assign.
+   * @param input - The input parameters for the assignment.
+   * @returns The assigned ticket assignment if successful, otherwise throws an error.
+   */
   async assign(adminId: string, ticketId: string, input: AssignTicketInput) {
     try {
       return await this.database.$transaction(async (transaction) => {
@@ -151,6 +171,8 @@ export class AdminTicketService {
 
         const assignedAt = new Date();
         const responseDeadline = new Date(assignedAt.getTime() + 24 * 60 * 60 * 1_000);
+
+        // Update the maintenance ticket's updatedAt field to reflect the assignment action.
         const claim = await transaction.maintenanceTicket.updateMany({
           where: ticketEligibilityWhere(ticketId),
           data: { updatedAt: assignedAt },
@@ -196,6 +218,13 @@ export class AdminTicketService {
     }
   }
 
+  /**
+   * Rejects a maintenance ticket, marking it as rejected and logging the reason.
+   * @param adminId - The ID of the admin rejecting the ticket.
+   * @param ticketId - The ID of the ticket to reject.
+   * @param input - The input parameters for the rejection.
+   * @returns The rejected ticket if successful, otherwise throws an error.
+   */
   async reject(adminId: string, ticketId: string, input: RejectTicketInput) {
     try {
       return await this.database.$transaction(async (transaction) => {
@@ -251,6 +280,12 @@ export class AdminTicketService {
     }
   }
 
+  /**
+   * Helper method to throw an error if a ticket is missing or ineligible for assignment/rejection.
+   * @param transaction - The Prisma transaction client.
+   * @param ticketId - The ID of the ticket to check.
+   * @throws AppError if the ticket is not found or ineligible.
+   */
   private async throwMissingOrConflict(
     transaction: Prisma.TransactionClient,
     ticketId: string
