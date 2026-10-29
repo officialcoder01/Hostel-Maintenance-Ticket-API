@@ -24,7 +24,7 @@ Staff-facing assignment response and resolution endpoints are not implemented ye
 
 There are no public API endpoints for hostel management; create local development hostels with the script below.
 
-See [docs/api-spec.md](docs/api-spec.md) for the full intended API behavior and [prisma/schema.prisma](prisma/schema.prisma) for the current data model.
+See [docs/api-spec.md](docs/api-spec.md) for the full intended API behavior, [docs/admin-workflow.md](docs/admin-workflow.md) for the admin workflow architecture diagram, and [prisma/schema.prisma](prisma/schema.prisma) for the current data model.
 
 ## Run locally
 
