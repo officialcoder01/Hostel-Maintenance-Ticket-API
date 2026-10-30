@@ -37,7 +37,7 @@ const ticketDetails = {
   hostel: { select: { id: true, name: true, address: true } },
   assignments: assignmentInfo,
   updates: {
-    orderBy: [{ createdAt: "desc" as const }, { id: "desc" as const }],
+    orderBy: [{ createdAt: "asc" as const }, { id: "asc" as const }],
     include: {
       actor: { select: { id: true, fullName: true, email: true } },
     },
