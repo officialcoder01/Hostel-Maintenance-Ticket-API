@@ -386,14 +386,14 @@ All endpoints in this section require authentication and the `STAFF` role.
 
 **Endpoint:** `GET /api/staff/assignments`
 
-Returns only assignment records belonging to the authenticated staff member.
+Returns only assignment records belonging to the authenticated staff member, with the related ticket summary, resident name, and hostel information.
 
 **Optional query parameters:**
 - `status` — Filter by assignment status.
 - `page` — Page number.
 - `limit` — Number of results per page.
 
-**Success:** `200 OK`  
+**Success:** `200 OK` with `{ "data": [...], "pagination": { "page": 1, "limit": 20, "total": 0, "totalPages": 0 } }`. Assignments are ordered newest first.
 **Possible errors:** `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
 
 ### 8.2 Accept an Assignment
@@ -409,7 +409,7 @@ Sets:
 - Assignment `respondedAt` to the current time.
 - Related ticket status to `IN_PROGRESS`.
 
-A staff member may accept only their own assignment when its status is `AWAITING_RESPONSE` and its response deadline has not passed.
+A staff member may accept only their own assignment when its status is `AWAITING_RESPONSE` and its response deadline has not passed. The transition and its `TicketUpdate` history event are committed together.
 
 **Possible errors:**
 - `401 Unauthorized` — Not authenticated.
@@ -435,7 +435,7 @@ Sets the assignment status to `DECLINED` and records `respondedAt`. The reason m
 
 The related ticket remains `PENDING` and becomes eligible for reassignment, provided no other active assignment exists.
 
-A staff member may decline only their own assignment when its status is `AWAITING_RESPONSE` and its response deadline has not passed.
+A staff member may decline only their own assignment when its status is `AWAITING_RESPONSE` and its response deadline has not passed. The decline reason is recorded in the ticket update history.
 
 **Possible errors:**
 - `400 Bad Request` — Invalid input or missing reason.
@@ -463,6 +463,8 @@ When the authenticated staff member owns an assignment with status `ACCEPTED`:
 - Set ticket status to `RESOLVED`.
 - Set ticket `resolvedAt` to the current time.
 - Record the resolution in `TicketUpdate`.
+
+The assignment, ticket, and history changes are committed together. The scheduled assignment-expiration process owns marking unanswered assignments `EXPIRED` and recording their history. Staff accept and decline actions reject a past-deadline response and do not duplicate that expiration workflow.
 
 **Possible errors:**
 - `400 Bad Request` — Invalid input.
