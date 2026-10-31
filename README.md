@@ -18,13 +18,12 @@ A REST API built with Node.js, Express, TypeScript, PostgreSQL, and Prisma. Resi
 - Admin ticket details with resident, hostel, assignment history, and update history.
 - Transactional ticket assignment and reassignment with 24-hour response deadlines.
 - Admin ticket rejection with a required reason and a ticket-history event.
+- Staff assignment listing, acceptance, decline, and resolution with ownership and workflow checks.
 - A race-safe assignment expiration job that can be run by an external scheduler.
-
-Staff-facing assignment response and resolution endpoints are not implemented yet.
 
 There are no public API endpoints for hostel management; create local development hostels with the script below.
 
-See [docs/api-spec.md](docs/api-spec.md) for the full intended API behavior, [docs/resident-workflow.md](docs/resident-workflow.md) and [docs/admin-workflow.md](docs/admin-workflow.md) for the resident and admin workflow diagrams, and [prisma/schema.prisma](prisma/schema.prisma) for the current data model.
+See [docs/api-spec.md](docs/api-spec.md) for the full intended API behavior, [docs/resident/resident-workflow.md](docs/resident/resident-workflow.md), [docs/admin/admin-workflow.md](docs/admin/admin-workflow.md), and [docs/staff/staff-workflow.md](docs/staff/staff-workflow.md) for the resident, admin, and staff workflow diagrams, and [prisma/schema.prisma](prisma/schema.prisma) for the current data model.
 
 ## Run locally
 

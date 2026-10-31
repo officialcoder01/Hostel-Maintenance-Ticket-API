@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1660" viewBox="0 0 1600 1660" role="img" aria-labelledby="title description">
+  <title id="title">Hostel maintenance staff assignment workflow</title>
+  <desc id="description">Flowchart showing staff authentication and the list, accept, decline, and resolve assignment workflows.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52647a"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #18263a; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 16px; fill: #53657a; }
+      .lane-title { font-size: 18px; font-weight: 700; fill: #fff; }
+      .label { font-size: 15px; font-weight: 600; }
+      .small { font-size: 13px; }
+      .muted { font-size: 13px; fill: #52647a; }
+      .arrow { fill: none; stroke: #52647a; stroke-width: 2; marker-end: url(#arrow); }
+      .link { fill: none; stroke: #52647a; stroke-width: 2; }
+      .node { fill: #fff; stroke: #9aacc0; stroke-width: 2; }
+      .decision { fill: #fff9e8; stroke: #d3a342; stroke-width: 2; }
+      .success { fill: #e9f7ef; stroke: #54a879; stroke-width: 2; }
+      .failure { fill: #fff0ef; stroke: #d87970; stroke-width: 2; }
+      .shared { fill: #edf4ff; stroke: #668ec7; stroke-width: 2; }
+      .lane { fill: #f7f9fc; stroke: #dbe3ec; stroke-width: 1.5; }
+      .lane-header { fill: #315d8a; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1660" fill="#fff"/>
+  <text class="title" x="800" y="46" text-anchor="middle">Staff Assignment Workflow</text>
+  <text class="subtitle" x="800" y="74" text-anchor="middle">Hostel Maintenance API | Staff can view and update only their own assignments</text>
+
+  <rect class="shared" x="520" y="102" width="560" height="70" rx="14"/>
+  <text class="label" x="800" y="132" text-anchor="middle">Staff client sends request to /api/staff</text>
+  <text class="small" x="800" y="155" text-anchor="middle">Protected routes require a bearer JWT and the STAFF role</text>
+  <path class="arrow" d="M800 172 V203"/>
+  <polygon class="decision" points="800,203 955,254 800,305 645,254"/>
+  <text class="label" x="800" y="250" text-anchor="middle">Authenticated as STAFF?</text>
+  <text class="small" x="800" y="272" text-anchor="middle">Valid token and role</text>
+  <path class="arrow" d="M645 254 H450"/>
+  <text class="small" x="545" y="242" text-anchor="middle">No / wrong role</text>
+  <rect class="failure" x="180" y="218" width="266" height="72" rx="12"/>
+  <text class="label" x="313" y="247" text-anchor="middle">Stop: 401 / 403</text>
+  <text class="small" x="313" y="270" text-anchor="middle">Unauthenticated / forbidden</text>
+  <path class="arrow" d="M800 305 V338"/>
+  <text class="small" x="816" y="326">Yes</text>
+  <rect class="shared" x="600" y="340" width="400" height="62" rx="12"/>
+  <text class="label" x="800" y="378" text-anchor="middle">Choose a staff assignment endpoint</text>
+
+  <rect class="lane" x="20" y="472" width="380" height="1080" rx="16"/>
+  <rect class="lane" x="420" y="472" width="380" height="1080" rx="16"/>
+  <rect class="lane" x="820" y="472" width="380" height="1080" rx="16"/>
+  <rect class="lane" x="1220" y="472" width="360" height="1080" rx="16"/>
+
+  <path class="link" d="M800 402 V444 H210 V467 M800 444 H610 V467 M800 444 H1010 V467 M800 444 H1400 V467"/>
+  <path class="arrow" d="M210 444 V467"/>
+  <path class="arrow" d="M610 444 V467"/>
+  <path class="arrow" d="M1010 444 V467"/>
+  <path class="arrow" d="M1400 444 V467"/>
+
+  <rect class="lane-header" x="20" y="472" width="380" height="56" rx="16"/>
+  <rect fill="#315d8a" x="20" y="508" width="380" height="20"/>
+  <text class="lane-title" x="210" y="508" text-anchor="middle">1. List assignments</text>
+  <rect class="lane-header" x="420" y="472" width="380" height="56" rx="16"/>
+  <rect fill="#315d8a" x="420" y="508" width="380" height="20"/>
+  <text class="lane-title" x="610" y="508" text-anchor="middle">2. Accept assignment</text>
+  <rect class="lane-header" x="820" y="472" width="380" height="56" rx="16"/>
+  <rect fill="#315d8a" x="820" y="508" width="380" height="20"/>
+  <text class="lane-title" x="1010" y="508" text-anchor="middle">3. Decline assignment</text>
+  <rect class="lane-header" x="1220" y="472" width="360" height="56" rx="16"/>
+  <rect fill="#315d8a" x="1220" y="508" width="360" height="20"/>
+  <text class="lane-title" x="1400" y="508" text-anchor="middle">4. Resolve assignment</text>
+
+  <!-- List assignments -->
+  <rect class="node" x="52" y="558" width="316" height="92" rx="12"/>
+  <text class="label" x="210" y="589" text-anchor="middle">GET /api/staff/assignments</text>
+  <text class="small" x="210" y="613" text-anchor="middle">Optional status, page, and limit</text>
+  <text class="small" x="210" y="635" text-anchor="middle">Defaults: page 1, limit 20</text>
+  <path class="arrow" d="M210 650 V686"/>
+  <polygon class="decision" points="210,686 324,733 210,780 96,733"/>
+  <text class="label" x="210" y="729" text-anchor="middle">Query valid?</text>
+  <text class="small" x="210" y="750" text-anchor="middle">Status and pagination</text>
+  <path class="arrow" d="M210 780 V820"/>
+  <text class="small" x="226" y="805">Yes</text>
+  <rect class="node" x="52" y="822" width="316" height="112" rx="12"/>
+  <text class="label" x="210" y="853" text-anchor="middle">Find this staff member's</text>
+  <text class="label" x="210" y="874" text-anchor="middle">assignments only</text>
+  <text class="small" x="210" y="899" text-anchor="middle">Include ticket, resident, and hostel</text>
+  <text class="small" x="210" y="920" text-anchor="middle">Newest assignments first</text>
+  <path class="arrow" d="M210 934 V972"/>
+  <rect class="success" x="52" y="974" width="316" height="88" rx="12"/>
+  <text class="label" x="210" y="1008" text-anchor="middle">Return 200 OK</text>
+  <text class="small" x="210" y="1033" text-anchor="middle">Assignments and pagination</text>
+  <text class="small" x="360" y="733" text-anchor="middle" fill="#b4473f">400</text>
+  <rect class="failure" x="52" y="1094" width="316" height="72" rx="12"/>
+  <text class="label" x="210" y="1123" text-anchor="middle">Invalid query</text>
+  <text class="small" x="210" y="1146" text-anchor="middle">Stop: 400 Bad Request</text>
+  <path class="arrow" d="M324 733 H380 V1130 H372"/>
+
+  <!-- Accept assignment -->
+  <rect class="node" x="452" y="558" width="316" height="82" rx="12"/>
+  <text class="label" x="610" y="590" text-anchor="middle">PATCH .../:assignmentId/accept</text>
+  <text class="small" x="610" y="615" text-anchor="middle">No request body</text>
+  <path class="arrow" d="M610 640 V676"/>
+  <polygon class="decision" points="610,676 724,723 610,770 496,723"/>
+  <text class="label" x="610" y="719" text-anchor="middle">Assignment ID valid?</text>
+  <path class="arrow" d="M610 770 V801"/>
+  <text class="small" x="626" y="790">Yes</text>
+  <polygon class="decision" points="610,801 724,848 610,895 496,848"/>
+  <text class="label" x="610" y="844" text-anchor="middle">Assignment exists?</text>
+  <path class="arrow" d="M610 895 V926"/>
+  <text class="small" x="626" y="915">Yes</text>
+  <polygon class="decision" points="610,926 724,973 610,1020 496,973"/>
+  <text class="label" x="610" y="969" text-anchor="middle">Owned by this staff?</text>
+  <path class="arrow" d="M610 1020 V1051"/>
+  <text class="small" x="626" y="1040">Yes</text>
+  <polygon class="decision" points="610,1051 724,1098 610,1145 496,1098"/>
+  <text class="label" x="610" y="1094" text-anchor="middle">Awaiting response?</text>
+  <text class="small" x="610" y="1115" text-anchor="middle">Ticket PENDING and visible</text>
+  <path class="arrow" d="M610 1145 V1177"/>
+  <text class="small" x="626" y="1165">Yes</text>
+  <polygon class="decision" points="610,1177 724,1224 610,1271 496,1224"/>
+  <text class="label" x="610" y="1220" text-anchor="middle">Before deadline?</text>
+  <path class="arrow" d="M610 1271 V1303"/>
+  <text class="small" x="626" y="1291">Yes</text>
+  <rect class="shared" x="452" y="1305" width="316" height="114" rx="12"/>
+  <text class="label" x="610" y="1336" text-anchor="middle">Serializable transaction</text>
+  <text class="small" x="610" y="1361" text-anchor="middle">Assignment → ACCEPTED</text>
+  <text class="small" x="610" y="1382" text-anchor="middle">Ticket → IN_PROGRESS</text>
+  <text class="small" x="610" y="1403" text-anchor="middle">Record ASSIGNMENT_ACCEPTED</text>
+  <path class="arrow" d="M610 1419 V1451"/>
+  <rect class="success" x="452" y="1453" width="316" height="70" rx="12"/>
+  <text class="label" x="610" y="1482" text-anchor="middle">Return 200 OK</text>
+  <text class="small" x="610" y="1505" text-anchor="middle">Assignment accepted</text>
+  <text class="small" x="760" y="723" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="760" y="848" text-anchor="middle" fill="#b4473f">404</text>
+  <text class="small" x="760" y="973" text-anchor="middle" fill="#b4473f">403</text>
+  <text class="small" x="760" y="1098" text-anchor="middle" fill="#b4473f">409</text>
+
+  <!-- Decline assignment -->
+  <rect class="node" x="852" y="558" width="316" height="92" rx="12"/>
+  <text class="label" x="1010" y="589" text-anchor="middle">PATCH .../:assignmentId/decline</text>
+  <text class="small" x="1010" y="613" text-anchor="middle">Provide a non-empty reason</text>
+  <text class="small" x="1010" y="635" text-anchor="middle">Up to 1,000 characters</text>
+  <path class="arrow" d="M1010 650 V686"/>
+  <polygon class="decision" points="1010,686 1124,733 1010,780 896,733"/>
+  <text class="label" x="1010" y="729" text-anchor="middle">ID and reason valid?</text>
+  <path class="arrow" d="M1010 780 V811"/>
+  <text class="small" x="1026" y="800">Yes</text>
+  <polygon class="decision" points="1010,811 1124,858 1010,905 896,858"/>
+  <text class="label" x="1010" y="854" text-anchor="middle">Assignment exists?</text>
+  <path class="arrow" d="M1010 905 V936"/>
+  <text class="small" x="1026" y="925">Yes</text>
+  <polygon class="decision" points="1010,936 1124,983 1010,1030 896,983"/>
+  <text class="label" x="1010" y="979" text-anchor="middle">Owned by this staff?</text>
+  <path class="arrow" d="M1010 1030 V1061"/>
+  <text class="small" x="1026" y="1050">Yes</text>
+  <polygon class="decision" points="1010,1061 1124,1108 1010,1155 896,1108"/>
+  <text class="label" x="1010" y="1104" text-anchor="middle">Awaiting response?</text>
+  <text class="small" x="1010" y="1125" text-anchor="middle">Ticket PENDING and visible</text>
+  <path class="arrow" d="M1010 1155 V1187"/>
+  <text class="small" x="1026" y="1175">Yes</text>
+  <polygon class="decision" points="1010,1187 1124,1234 1010,1281 896,1234"/>
+  <text class="label" x="1010" y="1230" text-anchor="middle">Before deadline?</text>
+  <path class="arrow" d="M1010 1281 V1313"/>
+  <text class="small" x="1026" y="1301">Yes</text>
+  <rect class="shared" x="852" y="1315" width="316" height="114" rx="12"/>
+  <text class="label" x="1010" y="1346" text-anchor="middle">Serializable transaction</text>
+  <text class="small" x="1010" y="1371" text-anchor="middle">Assignment → DECLINED</text>
+  <text class="small" x="1010" y="1392" text-anchor="middle">Ticket stays PENDING</text>
+  <text class="small" x="1010" y="1413" text-anchor="middle">Record decline reason in history</text>
+  <path class="arrow" d="M1010 1429 V1451"/>
+  <rect class="success" x="852" y="1453" width="316" height="70" rx="12"/>
+  <text class="label" x="1010" y="1482" text-anchor="middle">Return 200 OK</text>
+  <text class="small" x="1010" y="1505" text-anchor="middle">Can be reassigned if no other active assignment</text>
+  <text class="small" x="1160" y="733" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="1160" y="858" text-anchor="middle" fill="#b4473f">404</text>
+  <text class="small" x="1160" y="983" text-anchor="middle" fill="#b4473f">403</text>
+  <text class="small" x="1160" y="1108" text-anchor="middle" fill="#b4473f">409</text>
+
+  <!-- Resolve assignment -->
+  <rect class="node" x="1248" y="558" width="304" height="92" rx="12"/>
+  <text class="label" x="1400" y="589" text-anchor="middle">PATCH .../:assignmentId/resolve</text>
+  <text class="small" x="1400" y="613" text-anchor="middle">Provide a non-empty resolution</text>
+  <text class="small" x="1400" y="635" text-anchor="middle">message, up to 1,000 characters</text>
+  <path class="arrow" d="M1400 650 V686"/>
+  <polygon class="decision" points="1400,686 1508,733 1400,780 1292,733"/>
+  <text class="label" x="1400" y="729" text-anchor="middle">ID and message valid?</text>
+  <path class="arrow" d="M1400 780 V811"/>
+  <text class="small" x="1416" y="800">Yes</text>
+  <polygon class="decision" points="1400,811 1508,858 1400,905 1292,858"/>
+  <text class="label" x="1400" y="854" text-anchor="middle">Assignment exists?</text>
+  <path class="arrow" d="M1400 905 V936"/>
+  <text class="small" x="1416" y="925">Yes</text>
+  <polygon class="decision" points="1400,936 1508,983 1400,1030 1292,983"/>
+  <text class="label" x="1400" y="979" text-anchor="middle">Owned by this staff?</text>
+  <path class="arrow" d="M1400 1030 V1061"/>
+  <text class="small" x="1416" y="1050">Yes</text>
+  <polygon class="decision" points="1400,1061 1508,1108 1400,1155 1292,1108"/>
+  <text class="label" x="1400" y="1104" text-anchor="middle">ACCEPTED and</text>
+  <text class="small" x="1400" y="1125" text-anchor="middle">ticket IN_PROGRESS?</text>
+  <path class="arrow" d="M1400 1155 V1191"/>
+  <text class="small" x="1416" y="1179">Yes</text>
+  <rect class="shared" x="1248" y="1193" width="304" height="134" rx="12"/>
+  <text class="label" x="1400" y="1224" text-anchor="middle">Serializable transaction</text>
+  <text class="small" x="1400" y="1249" text-anchor="middle">Assignment → COMPLETED</text>
+  <text class="small" x="1400" y="1270" text-anchor="middle">Ticket → RESOLVED</text>
+  <text class="small" x="1400" y="1291" text-anchor="middle">Set resolvedAt; record message</text>
+  <text class="small" x="1400" y="1312" text-anchor="middle">in ticket history</text>
+  <path class="arrow" d="M1400 1327 V1365"/>
+  <rect class="success" x="1248" y="1367" width="304" height="78" rx="12"/>
+  <text class="label" x="1400" y="1400" text-anchor="middle">Return 200 OK</text>
+  <text class="small" x="1400" y="1424" text-anchor="middle">Ticket resolution recorded</text>
+  <text class="small" x="1540" y="733" text-anchor="middle" fill="#b4473f">400</text>
+  <text class="small" x="1540" y="858" text-anchor="middle" fill="#b4473f">404</text>
+  <text class="small" x="1540" y="983" text-anchor="middle" fill="#b4473f">403</text>
+  <text class="small" x="1540" y="1108" text-anchor="middle" fill="#b4473f">409</text>
+
+  <text class="small" x="740" y="1210" fill="#b4473f">No: 409</text>
+  <text class="small" x="1140" y="1220" fill="#b4473f">No: 409</text>
+  <rect class="shared" x="300" y="1570" width="1000" height="64" rx="12"/>
+  <text class="label" x="800" y="1595" text-anchor="middle">Separate scheduled job expires unanswered assignments after the deadline</text>
+  <text class="small" x="800" y="1618" text-anchor="middle">Late accept/decline returns 409; the job records EXPIRED and a system history event; the ticket stays PENDING.</text>
+</svg>
