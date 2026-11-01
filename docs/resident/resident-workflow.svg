@@ -59,11 +59,11 @@
   <rect class="shared" x="730" y="502" width="380" height="58" rx="12"/>
   <text class="label" x="920" y="537" text-anchor="middle">Choose a resident ticket endpoint</text>
 
-  <rect class="lane" x="20" y="610" width="348" height="1070" rx="16"/>
-  <rect class="lane" x="386" y="610" width="348" height="1070" rx="16"/>
-  <rect class="lane" x="752" y="610" width="348" height="1070" rx="16"/>
-  <rect class="lane" x="1118" y="610" width="348" height="1070" rx="16"/>
-  <rect class="lane" x="1484" y="610" width="336" height="1070" rx="16"/>
+  <rect class="lane" x="20" y="610" width="348" height="1000" rx="16"/>
+  <rect class="lane" x="386" y="610" width="348" height="1000" rx="16"/>
+  <rect class="lane" x="752" y="610" width="348" height="1000" rx="16"/>
+  <rect class="lane" x="1118" y="610" width="348" height="1000" rx="16"/>
+  <rect class="lane" x="1484" y="610" width="336" height="1000" rx="16"/>
 
   <path class="arrow" d="M920 560 V582 H194 V605"/>
   <path class="arrow" d="M920 560 V582 H560 V605"/>
@@ -213,6 +213,7 @@
   <text class="small" x="1790" y="984" text-anchor="middle" fill="#b4473f">404</text>
   <text class="small" x="1790" y="1108" text-anchor="middle" fill="#b4473f">409</text>
 
-  <text class="muted" x="920" y="1632" text-anchor="middle">Active assignments are AWAITING_RESPONSE or ACCEPTED. Declined or expired assignments do not block editing or soft deletion.</text>
-  <text class="muted" x="920" y="1657" text-anchor="middle">Soft-deleted tickets are hidden from normal resident and admin queries; their assignment and update history remains in the database.</text>
+  <rect class="shared" x="300" y="1570" width="1000" height="64" rx="12"/>
+  <text class="label" x="800" y="1595" text-anchor="middle">Active assignments are AWAITING_RESPONSE or ACCEPTED. Declined or expired assignments do not block editing or soft deletion.</text>
+  <text class="small" x="800" y="1618" text-anchor="middle">Soft-deleted tickets are hidden from normal resident and admin queries; their assignment and update history remains in the database.</text>
 </svg>
