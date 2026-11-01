@@ -501,9 +501,7 @@ System-generated events may have a `null` actor ID.
 
 ## 10. Assignment Expiration
 
-Assignment expiration is handled by a background or scheduled system process, not by a user-facing endpoint.
-
-The implementation provides `npm run assignments:expire` as a one-shot scheduled-job command. Configure the hosting platform's persistent scheduler (for example, a cron job) to run it regularly, such as once per minute. Do not rely on an in-process timer for deployments that may restart or scale to multiple instances. Each invocation processes at most 100 due assignments; subsequent invocations process any remaining records.
+Assignment expiration is handled by a background scheduled process, not by a user-facing endpoint. The API server starts a `node-cron` job that checks for due assignments at the start of every hour. The job expires at most 100 assignments per run; remaining due assignments are processed on later runs. The API process must remain running for automatic expiration. For deployments running multiple API instances, each instance may schedule the job; the conditional status update and transaction prevent assignments from being expired more than once.
 
 When an assignment remains `AWAITING_RESPONSE` past its `responseDeadline`, the system must:
 1. Change the assignment status to `EXPIRED`.
