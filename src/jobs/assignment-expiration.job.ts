@@ -7,9 +7,12 @@ export async function runAssignmentExpirationJob(): Promise<void> {
 
   try {
     const expiredCount = await assignmentExpirationService.expireDueAssignments();
-    console.info(
-      `[job:assignment-expiration] Finished. Expired ${expiredCount} assignment(s).`
-    );
+
+    if (expiredCount > 0) {
+      console.info(
+        `[job:assignment-expiration] Finished. Expired ${expiredCount} assignment(s).`
+      );
+  }
   } catch (error) {
     console.error("[job:assignment-expiration] Failed to expire assignments.", error);
   }
