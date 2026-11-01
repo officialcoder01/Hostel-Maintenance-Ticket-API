@@ -91,13 +91,7 @@ npm start
 
 ### Expire unanswered assignments
 
-Configure your hosting platform's persistent scheduler to run this command regularly (for example, once per minute):
-
-```bash
-npm run assignments:expire
-```
-
-The job expires up to 100 assignments per invocation and writes a system-authored ticket update for each expiration. It does not change the ticket's overall `PENDING` status.
+When the API server starts, an in-process `node-cron` job checks for expired assignments at the start of every hour. Keep the API server running for automatic expiration. Each run expires up to 100 due assignments and writes a system-authored ticket update for each one; the ticket remains `PENDING`.
 
 ## Try the resident workflow
 
