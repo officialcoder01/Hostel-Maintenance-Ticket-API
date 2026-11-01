@@ -63,7 +63,7 @@ export class AssignmentExpirationService {
             ticketId: assignment.ticketId,
             actorId: null,
             eventType: "ASSIGNMENT_EXPIRED",
-            message: "The assignment expired because staff did not respond within 24 hours.",
+            message: "The assignment expired because staff did not respond before the response deadline.",
           },
         });
 
