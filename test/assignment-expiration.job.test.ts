@@ -22,9 +22,9 @@ describe("assignment expiration job", () => {
     }
 
     try {
-      expect(task.getPattern()).toBe("* * * * *");
+      expect(task.getPattern()).toBe("0 * * * *");
       expect(info).toHaveBeenCalledWith(
-        "[job:assignment-expiration] Scheduled to run every hour on hour."
+        "[job:assignment-expiration] Scheduled to run at the start of every hour."
       );
     } finally {
       await task.destroy();
