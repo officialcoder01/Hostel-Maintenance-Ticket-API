@@ -214,17 +214,15 @@ The first command applies the checked-in migrations to the configured database. 
 
 ### 5. Start the development server
 
-```powershell
-npx tsx src/server.ts
+```git bash
+npm run dev
 ```
 
-This runs the TypeScript entry point directly with the locally installed `tsx` executable. It listens on port `8080` by default, or on the port configured by `PORT`. Visit `http://localhost:8080/` (or your configured port) to receive a JSON response confirming the API is running. This direct command does not automatically restart the process when files change.
-
-The `dev` script in `package.json` invokes `nodemon`, but `nodemon` is not declared in the project's dependencies. As a result, `npm run dev` may fail after a clean `npm ci` unless `nodemon` is separately available on the machine.
+This runs the TypeScript entry point directly with the locally installed `tsx` executable. It listens on port `8080` by default, or on the port configured by `PORT`. Visit `http://localhost:8080/` (or your configured port) to receive a JSON response confirming the API is running.
 
 ### 6. Build and run the compiled server
 
-```powershell
+```git bash
 npm run build
 npm start
 ```
@@ -235,19 +233,19 @@ npm start
 
 The data scripts below are restricted to `NODE_ENV=development`. Start by creating a hostel:
 
-```powershell
+```git bash
 npm run dev:create-hostel -- "North Hall" "123 Campus Road"
 ```
 
 Save the printed hostel ID. Then create a resident; the script prompts for a password interactively:
 
-```powershell
+```git bash
 npm run dev:create-resident -- "Alex Resident" alex@example.com
 ```
 
 You can register a resident through `POST /api/auth/register` instead. Log in through `POST /api/auth/login` to get an access token, then pass it in an `Authorization: Bearer <token>` header to protected endpoints. To generate a one-hour development token for an existing resident instead of logging in:
 
-```powershell
+```git bash
 npm run dev:token -- alex@example.com
 ```
 
@@ -261,7 +259,8 @@ Use the saved hostel ID when creating a resident ticket. See [API documentation]
 | `JWT_SECRET` | Required for authentication | Secret used to sign and verify JWTs. Login and protected-route authentication require it. Use a sufficiently long, unpredictable value; do not commit it. |
 | `PORT` | No | HTTP listener port. Defaults to `8080` if missing or not numeric. |
 | `NODE_ENV` | No for server startup; set to `development` for data scripts | The development data and token scripts refuse to run unless this is exactly `development`. The `npm test` script sets it to `test`. |
-| `DATABASE_URL_TEST` | Not currently consumed | Included in `.env.example`, but the application and Jest setup do not read this variable. The current test setup assigns a test `DATABASE_URL` itself. |
+
+The current test setup assigns a test `DATABASE_URL` itself.
 
 The server loads `.env` through `dotenv/config`. Do not put real credentials or secrets in documentation, source control, or shared logs.
 
@@ -283,28 +282,43 @@ Foreign-key deletion behavior is restrictive for tickets, assignments, and their
 
 The API base path is `/api`. Requests and responses use JSON, IDs are UUIDs, and timestamps are ISO 8601. List endpoints use `page` and `limit` query parameters, defaulting to page `1` and limit `20`; the maximum limit is `100`.
 
-The detailed request bodies, validations, response shapes, status codes, and business rules are documented in [`docs/api-spec.md`](./docs/api-spec.md). The table below summarizes routes currently registered in `src/routes/`.
+The detailed request bodies, validations, response shapes, status codes, and business rules are documented in [`docs/api-spec.md`](./docs/api-spec.md). The following grouped summary lists routes currently registered in `src/routes/`.
+
+### Authentication
 
 | Method | Path | Access | Purpose |
 |---|---|---|---|
 | `POST` | `/api/auth/register` | Public | Register a resident account. |
 | `POST` | `/api/auth/login` | Public | Authenticate and return a JWT and public user profile. |
 | `GET` | `/api/auth/me` | Any authenticated role | Return the authenticated user's public profile. |
+
+### Resident
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
 | `POST` | `/api/tickets` | Resident | Create a ticket. |
 | `GET` | `/api/tickets/mine` | Resident | List the authenticated resident's tickets. |
 | `GET` | `/api/tickets/:id` | Owning resident | Get one of the resident's tickets. |
 | `PATCH` | `/api/tickets/:id` | Owning resident | Edit permitted fields on an eligible ticket. |
 | `DELETE` | `/api/tickets/:id` | Owning resident | Soft-delete an eligible ticket; responds with no content. |
+
+### Admin
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
 | `GET` | `/api/admin/tickets` | Admin | List, filter, and paginate visible tickets. |
 | `GET` | `/api/admin/tickets/:id` | Admin | Get ticket details, assignment history, and updates. |
 | `PATCH` | `/api/admin/tickets/:id/assignments` | Admin | Assign or reassign a ticket to a staff member. |
 | `PATCH` | `/api/admin/tickets/:id/rejection` | Admin | Reject an eligible ticket with a reason. |
+
+### Staff
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
 | `GET` | `/api/staff/assignments` | Staff | List the authenticated staff member's assignments. |
 | `PATCH` | `/api/staff/assignments/:assignmentId/accept` | Owning staff member | Accept an awaiting assignment. |
 | `PATCH` | `/api/staff/assignments/:assignmentId/decline` | Owning staff member | Decline an awaiting assignment with a reason. |
 | `PATCH` | `/api/staff/assignments/:assignmentId/resolve` | Owning staff member | Resolve an accepted assignment with a message. |
-
-**Specification discrepancy:** `docs/api-spec.md` also describes `GET /api/tickets/:id/updates`, but no such route is currently registered. The admin ticket detail response does include ticket updates. Do not rely on the standalone updates endpoint until it is implemented.
 
 ## Authentication and authorization
 
@@ -397,7 +411,7 @@ The suite covers:
 
 Run the automated tests and static checks:
 
-```powershell
+```git bash
 npm test
 npm run typecheck
 npm run test:typecheck
@@ -425,7 +439,6 @@ npm run test:typecheck
 | Connection fails after adding special characters to a password | URL-encode reserved characters in the username or password portion of `DATABASE_URL`. |
 | Prisma says a table or column does not exist | Check the target database, then apply the checked-in migrations with `npx prisma migrate dev`. Generate the client with `npx prisma generate` after setup or schema changes. |
 | TypeScript cannot find the generated Prisma client | Run `npx prisma generate` after installing dependencies and configuring `DATABASE_URL`. |
-| `npm run dev` reports that `nodemon` is not recognized | `nodemon` is referenced by the package script but is not a declared dependency. Start the server with `npx tsx src/server.ts`, or use the compiled workflow (`npm run build` followed by `npm start`). |
 | Login or protected requests report JWT configuration errors | Set `JWT_SECRET` in `.env`, restart the server, and obtain a new token. Tokens expire after one hour. |
 | A development data script refuses to run | Set `NODE_ENV=development` in the local `.env`; these scripts deliberately do not run in other environments. |
 | A request returns `409 Conflict` | The requested action may be disallowed by the ticket or assignment's current status, active assignment, or response deadline. Check the lifecycle rules and API specification. |
@@ -433,7 +446,6 @@ npm run test:typecheck
 
 ## Current limitations and documented scope
 
-- `GET /api/tickets/:id/updates` appears in the API specification but is not currently mounted as a route. Admin ticket details include updates.
 - Public endpoints do not manage hostels, and the repository does not provide production workflows or scripts for provisioning admin and staff users. The development hostel script is for local setup only.
 - Assignment expiration relies on an in-process hourly schedule; it is not suitable for environments where the application process is not kept alive unless a reliable external scheduler is added.
 - The API specification lists real-time chat, notifications, media uploads, automatic staff selection, and analytics as out of scope for version 1. They are not implemented features.
