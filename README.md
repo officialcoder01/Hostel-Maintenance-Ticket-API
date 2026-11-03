@@ -169,9 +169,9 @@ The `psql` command-line client is useful for creating a local database, but any 
 
 ### 1. Clone the repository and install dependencies
 
-```powershell
+```git bash
 git clone https://github.com/officialcoder01/Hostel-Maintenance-Ticket-API.git
-Set-Location Hostel-Maintenance-Ticket-API
+cd Hostel-Maintenance-Ticket-API
 npm ci
 ```
 
@@ -190,7 +190,7 @@ CREATE DATABASE hostel_maintenance;
 Copy the supplied template and edit `.env` with your local values:
 
 ```powershell
-Copy-Item .env.example .env
+cp .env.example .env
 ```
 
 Set `DATABASE_URL` to your PostgreSQL connection string and replace `JWT_SECRET` with a long, random local secret. A connection URL generally follows this form:
@@ -205,7 +205,7 @@ URL-encode any reserved characters in the username or password. Keep `.env` priv
 
 With PostgreSQL running and `DATABASE_URL` configured, run:
 
-```powershell
+```git bash
 npx prisma migrate dev
 npx prisma generate
 ```
