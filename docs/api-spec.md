@@ -494,10 +494,50 @@ Access rules:
 
 Each update includes its ID, ticket ID, actor ID when applicable, event type, message when applicable, and creation timestamp.
 
-System-generated events may have a `null` actor ID.
+Updates are returned oldest first, with ties ordered by update ID. Each record
+also includes the actor's public ID and name when an actor exists, plus `source`
+(`USER` when `actorId` is present, otherwise `SYSTEM`). System-generated events
+have a `null` `actorId` and `actor`. No separate event record is created.
+
+Example response:
+
+```json
+[
+  {
+    "id": "update-uuid",
+    "ticketId": "ticket-uuid",
+    "actorId": "user-uuid",
+    "eventType": "ASSIGNED",
+    "message": "Ticket assigned to staff.",
+    "createdAt": "2026-01-01T10:00:00.000Z",
+    "actor": { "id": "user-uuid", "fullName": "Alex Admin" },
+    "source": "USER"
+  },
+  {
+    "id": "update-uuid",
+    "ticketId": "ticket-uuid",
+    "actorId": null,
+    "eventType": "EXPIRED",
+    "message": "Assignment expired.",
+    "createdAt": "2026-01-01T11:00:00.000Z",
+    "actor": null,
+    "source": "SYSTEM"
+  }
+]
+```
+
+Only visible (not soft-deleted) tickets can be read. Residents must own the
+ticket. Admins may read any visible ticket. Staff must have an assignment for
+the ticket whose status is `AWAITING_RESPONSE` or `ACCEPTED`; declined,
+expired, and completed assignment history does not grant current access.
+Authorization uses the authenticated user's ID and role, never client-supplied
+ownership or role fields. A ticket with no updates returns `200 OK` with `[]`.
 
 **Success:** `200 OK`  
-**Possible errors:** `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+**Possible errors:**
+- `400 Bad Request` — Invalid ticket ID.
+- `401 Unauthorized` — Not authenticated.
+- `404 Not Found` — Ticket does not exist, is soft-deleted, or is not accessible to the caller.
 
 ## 10. Assignment Expiration
 
