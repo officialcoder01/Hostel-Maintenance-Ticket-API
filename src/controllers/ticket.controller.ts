@@ -45,6 +45,13 @@ export function createTicketController(service: TicketService = ticketService) {
         )
       );
     }) satisfies RequestHandler,
+    getUpdates: (async (request, response) => {
+      const { id } = ticketIdSchema.parse(request.params);
+      if (!request.user) throw new Error("Authenticated user is required.");
+      return response.status(200).json(
+        await service.getUpdates(request.user.id, request.user.role, id)
+      );
+    }) satisfies RequestHandler,
     update: (async (request, response) => {
       const { id } = ticketIdSchema.parse(request.params);
       return response.status(200).json(
