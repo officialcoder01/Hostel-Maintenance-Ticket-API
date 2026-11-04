@@ -1,6 +1,7 @@
 import {
   AssignmentStatus,
   TicketStatus,
+  UserRole,
   type PrismaClient
 } from "../generated/prisma/client.js";
 import { AppError } from "../errors/app-error.js";
@@ -113,6 +114,55 @@ export class TicketService {
     );
 
     return ticket;
+  }
+
+  /**
+   * Retrieves the chronological update history for a ticket the user may access.
+   * @param userId - The authenticated user's ID.
+   * @param role - The authenticated user's role.
+   * @param ticketId - The ID of the ticket to retrieve updates for.
+   */
+  async getUpdates(userId: string, role: UserRole, ticketId: string) {
+    const where = {
+      id: ticketId,
+      ...visibleTicket,
+      ...(role === UserRole.RESIDENT
+        ? {
+          residentId: userId
+        }
+        : {}),
+      ...(role === UserRole.STAFF
+        ? {
+          assignments: {
+            some: {
+              staffId: userId,
+              status: { in: activeAssignmentStatuses },
+            },
+          },
+        }
+        : {}),
+    };
+
+    const ticket = await this.database.maintenanceTicket.findFirst({
+      where,
+      select: {
+        updates: {
+          orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+          include: {
+            actor: { select: { id: true, fullName: true } },
+          },
+        },
+      },
+    });
+
+    if (!ticket) {
+      throw new AppError(404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+    }
+
+    return ticket.updates.map((update) => ({
+      ...update,
+      source: update.actorId === null ? "SYSTEM" : "USER",
+    }));
   }
 
   /**
