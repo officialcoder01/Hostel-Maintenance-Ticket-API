@@ -8,7 +8,10 @@ export function createTicketRouter(service?: TicketService) {
   const router = Router();
   const controller = createTicketController(service);
   
-  router.use(authenticate, requireRole(UserRole.RESIDENT));
+  router.use(authenticate);
+  router.get("/:id/updates", controller.getUpdates);
+
+  router.use(requireRole(UserRole.RESIDENT));
   router.post("/", controller.create);
   router.get("/mine", controller.listMine);
   router.get("/:id", controller.getMine);
