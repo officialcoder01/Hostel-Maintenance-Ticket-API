@@ -38,6 +38,7 @@ The implementation supports resident registration and login, resident-owned tick
 - Ticket creation, listing, retrieval, editing, and soft deletion for the owning resident.
 - Administrator ticket filtering, detail views, staff assignment/reassignment, and rejection with a reason.
 - Staff assignment listing, acceptance, decline with a reason, and resolution with a message.
+- Authenticated chronological ticket update history for owning residents, administrators, and currently assigned staff.
 - A separate assignment record for every assignment attempt, preserving previous assignment history.
 - Ticket event history stored with the ticket and associated user when applicable.
 - Validation of request bodies, path parameters, and query parameters.
@@ -299,6 +300,7 @@ The detailed request bodies, validations, response shapes, status codes, and bus
 | `POST` | `/api/tickets` | Resident | Create a ticket. |
 | `GET` | `/api/tickets/mine` | Resident | List the authenticated resident's tickets. |
 | `GET` | `/api/tickets/:id` | Owning resident | Get one of the resident's tickets. |
+| `GET` | `/api/tickets/:id/updates` | Owning resident, admin, or staff with an active assignment | Get visible ticket history, oldest first; system events have no actor. |
 | `PATCH` | `/api/tickets/:id` | Owning resident | Edit permitted fields on an eligible ticket. |
 | `DELETE` | `/api/tickets/:id` | Owning resident | Soft-delete an eligible ticket; responds with no content. |
 
@@ -327,6 +329,7 @@ The detailed request bodies, validations, response shapes, status codes, and bus
 - Protected requests must send `Authorization: Bearer <token>`.
 - The authentication middleware verifies the token and reads the user ID (`sub`) and role claims. Routes then require the appropriate `RESIDENT`, `ADMIN`, or `STAFF` role.
 - Services enforce resource ownership and allowed state transitions in addition to route-level role checks.
+- Ticket history access uses the authenticated identity: residents must own the ticket, staff must have an `AWAITING_RESPONSE` or `ACCEPTED` assignment, and admins may view any visible ticket. Soft-deleted tickets are hidden.
 - Admin and staff provisioning is outside this repository; there are no public account-management endpoints or admin/staff bootstrap scripts.
 
 ## Ticket and assignment lifecycle
@@ -361,6 +364,7 @@ Important rules enforced by the services:
 - Residents can edit or soft-delete only their own pending tickets with no active assignment. Declined or expired assignment records alone do not prevent those actions.
 - Administrative rejection requires a reason and is recorded as a ticket update.
 - Important transitions are recorded in `TicketUpdate`; multi-record changes use database transactions.
+- `GET /api/tickets/:id/updates` returns those records in chronological order, including actor ID/profile when available and a `source` field (`USER` or `SYSTEM`). An empty history is returned as `[]`.
 
 ## Background assignment expiration
 
@@ -405,6 +409,7 @@ The suite covers:
 
 - Authentication service behavior, registration/login validation, and auth HTTP routes.
 - Ticket validation, ticket service rules, and resident ticket HTTP routes.
+- Ticket history access rules, update ordering, system events, empty histories, and HTTP behavior.
 - Admin ticket service behavior and admin HTTP routes.
 - Staff assignment service behavior and staff HTTP routes.
 - Assignment expiration service behavior and scheduled-job behavior.
