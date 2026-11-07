@@ -14,7 +14,7 @@ export const globalLimiter = rateLimit({
 
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
+  max: 7, // limit each IP to 7 requests per windowMs
   message: {
     status: 429,
     error: "TOO_MANY_REQUESTS",
