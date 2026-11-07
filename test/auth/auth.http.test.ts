@@ -1,10 +1,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import request from "supertest";
-import { AppError } from "../src/errors/app-error.js";
-import { errorHandler } from "../src/middleware/error-handler.js";
-import { createAuthRouter } from "../src/routes/auth.routes.js";
-import { AuthService } from "../src/services/auth.service.js";
+import { AppError } from "../../src/errors/app-error.js";
+import { errorHandler } from "../../src/middleware/error-handler.js";
+import { createAuthRouter } from "../../src/routes/auth.routes.js";
+import { AuthService } from "../../src/services/auth.service.js";
 
 const userId = "550e8400-e29b-41d4-a716-446655440020";
 

@@ -3,7 +3,7 @@ import {
   listTicketsQuerySchema,
   ticketIdSchema,
   updateTicketSchema
-} from "../src/validations/ticket.validation.js";
+} from "../../src/validations/ticket.validation.js";
 
 const id = "550e8400-e29b-41d4-a716-446655440000";
 

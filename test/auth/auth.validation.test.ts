@@ -1,7 +1,7 @@
 import {
   loginSchema,
   registerSchema
-} from "../src/validations/auth.validation.js";
+} from "../../src/validations/auth.validation.js";
 
 describe("authentication validation", () => {
   it("accepts and normalizes a valid resident registration", () => {

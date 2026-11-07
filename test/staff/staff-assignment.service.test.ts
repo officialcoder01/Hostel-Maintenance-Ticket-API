@@ -1,8 +1,8 @@
 import {
   AssignmentStatus,
   TicketStatus,
-} from "../src/generated/prisma/client.js";
-import { StaffAssignmentService } from "../src/services/staff-assignment.service.js";
+} from "../../src/generated/prisma/client.js";
+import { StaffAssignmentService } from "../../src/services/staff-assignment.service.js";
 
 const staffId = "550e8400-e29b-41d4-a716-446655440031";
 const otherStaffId = "550e8400-e29b-41d4-a716-446655440032";

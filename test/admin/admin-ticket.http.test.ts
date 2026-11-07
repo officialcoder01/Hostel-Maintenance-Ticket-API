@@ -1,10 +1,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import request from "supertest";
-import { AppError } from "../src/errors/app-error.js";
-import { errorHandler } from "../src/middleware/error-handler.js";
-import { createAdminRouter } from "../src/routes/admin.routes.js";
-import { AdminTicketService } from "../src/services/admin-ticket.service.js";
+import { AppError } from "../../src/errors/app-error.js";
+import { errorHandler } from "../../src/middleware/error-handler.js";
+import { createAdminRouter } from "../../src/routes/admin.routes.js";
+import { AdminTicketService } from "../../src/services/admin-ticket.service.js";
 
 const adminId = "550e8400-e29b-41d4-a716-446655440011";
 const ticketId = "550e8400-e29b-41d4-a716-446655440012";

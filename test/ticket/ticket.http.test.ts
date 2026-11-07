@@ -1,10 +1,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import request from "supertest";
-import { AppError } from "../src/errors/app-error.js";
-import { errorHandler } from "../src/middleware/error-handler.js";
-import { createTicketRouter } from "../src/routes/ticket.routes.js";
-import { TicketService } from "../src/services/ticket.service.js";
+import { AppError } from "../../src/errors/app-error.js";
+import { errorHandler } from "../../src/middleware/error-handler.js";
+import { createTicketRouter } from "../../src/routes/ticket.routes.js";
+import { TicketService } from "../../src/services/ticket.service.js";
 
 const residentId = "550e8400-e29b-41d4-a716-446655440001";
 const hostelId = "550e8400-e29b-41d4-a716-446655440003";

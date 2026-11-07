@@ -2,8 +2,8 @@ import {
   AssignmentStatus,
   TicketStatus,
   UserRole
-} from "../src/generated/prisma/client.js";
-import { AdminTicketService } from "../src/services/admin-ticket.service.js";
+} from "../../src/generated/prisma/client.js";
+import { AdminTicketService } from "../../src/services/admin-ticket.service.js";
 
 const adminId = "550e8400-e29b-41d4-a716-446655440001";
 const ticketId = "550e8400-e29b-41d4-a716-446655440002";

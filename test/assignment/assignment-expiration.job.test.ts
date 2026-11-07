@@ -1,9 +1,9 @@
 import cron from "node-cron";
-import { assignmentExpirationService } from "../src/services/assignment-expiration.service.js";
+import { assignmentExpirationService } from "../../src/services/assignment-expiration.service.js";
 import {
   runAssignmentExpirationJob,
   startAssignmentExpirationJob
-} from "../src/jobs/assignment-expiration.job.js";
+} from "../../src/jobs/assignment-expiration.job.js";
 
 describe("assignment expiration job", () => {
   afterEach(() => {

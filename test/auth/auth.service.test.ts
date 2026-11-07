@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { UserRole } from "../src/generated/prisma/client.js";
-import { AuthService } from "../src/services/auth.service.js";
+import { UserRole } from "../../src/generated/prisma/client.js";
+import { AuthService } from "../../src/services/auth.service.js";
 
 const userId = "550e8400-e29b-41d4-a716-446655440010";
 

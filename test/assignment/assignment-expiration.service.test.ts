@@ -1,5 +1,5 @@
-import { AssignmentStatus } from "../src/generated/prisma/client.js";
-import { AssignmentExpirationService } from "../src/services/assignment-expiration.service.js";
+import { AssignmentStatus } from "../../src/generated/prisma/client.js";
+import { AssignmentExpirationService } from "../../src/services/assignment-expiration.service.js";
 
 const assignmentId = "550e8400-e29b-41d4-a716-446655440021";
 const ticketId = "550e8400-e29b-41d4-a716-446655440022";
